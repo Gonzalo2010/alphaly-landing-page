@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LidiAI — Casi lista</title>
+  <meta name="description" content="LidiAI está entrenándose. Vuelve pronto." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --c-bg: #f8f9fc;
+      --c-surface: #ffffff;
+      --c-border: #e4e7f0;
+      --c-text: #111827;
+      --c-muted: #6b7280;
+      --c-brand: #4f63d2;
+      --c-brand-dark: #3a4db5;
+      --c-brand-light: #eef0fd;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    html { height: 100%; }
+
+    body {
+      font-family: var(--font);
+      background: var(--c-bg);
+      color: var(--c-text);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--c-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--c-border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: .4;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(79,99,210,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* floating math symbols */
+    .floaters {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .floater {
+      position: absolute;
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      color: rgba(79,99,210,.12);
+      animation: floatUp linear infinite;
+      user-select: none;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-20vh) rotate(20deg); opacity: 0; }
+    }
+
+    /* main card */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--c-surface);
+      border: 1.5px solid var(--c-border);
+      border-radius: 24px;
+      padding: 52px 48px 44px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(79,99,210,.13), 0 2px 8px rgba(0,0,0,.05);
+    }
+
+    /* logo */
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .logo-img-ring {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+    }
+
+    .logo-img-ring img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-img-ring .ripple {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .logo-img-ring .ripple span {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--c-brand);
+      opacity: 0;
+      animation: demo-ripple 3s ease-out infinite;
+    }
+
+    .logo-img-ring .ripple span:nth-child(1) { animation-delay: 0s; }
+    .logo-img-ring .ripple span:nth-child(2) { animation-delay: .9s; }
+    .logo-img-ring .ripple span:nth-child(3) { animation-delay: 1.8s; }
+
+    @keyframes demo-ripple {
+      0%   { transform: scale(1);   opacity: .7; border-color: var(--c-brand); }
+      50%  { opacity: .3; border-color: #6ee7ff; }
+      100% { transform: scale(2.2); opacity: 0; border-color: var(--c-brand); }
+    }
+
+    .logo-name {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      color: var(--c-brand);
+      line-height: 1;
+    }
+
+    .logo-name sup {
+      font-size: .55em;
+      font-weight: 700;
+      vertical-align: super;
+      letter-spacing: 0;
+      color: var(--c-brand-dark);
+    }
+
+    /* status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--c-brand-light);
+      color: var(--c-brand);
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(79,99,210,.18);
+    }
+
+    .status-badge .dot {
+      width: 7px;
+      height: 7px;
+      background: #f59e0b;
+      border-radius: 50%;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .25; }
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      color: var(--c-text);
+    }
+
+    h1 span { color: var(--c-brand); }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--c-muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    /* math joke card */
+    .joke {
+      background: var(--c-brand-light);
+      border: 1.5px solid rgba(79,99,210,.18);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+
+    .joke-label {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--c-brand);
+      margin-bottom: 8px;
+    }
+
+    .joke-text {
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      color: var(--c-text);
+      line-height: 1.5;
+    }
+
+    .joke-punchline {
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      color: var(--c-muted);
+      margin-top: 6px;
+    }
+
+    /* progress bar */
+    .progress-wrap {
+      margin-bottom: 32px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--c-muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      height: 7px;
+      background: var(--c-border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--c-brand), #6ee7ff);
+      border-radius: 99px;
+      transition: width 1.2s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    /* actions */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-family: var(--font);
+      font-size: .95rem;
+      font-weight: 600;
+      padding: 13px 24px;
+      border-radius: 11px;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s, background .2s;
+      line-height: 1;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--c-brand);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(79,99,210,.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--c-brand-dark);
+      box-shadow: 0 4px 18px rgba(79,99,210,.45);
+    }
+
+    .btn-ghost {
+      background: var(--c-bg);
+      color: var(--c-text);
+      border: 1.5px solid var(--c-border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--c-brand-light);
+      border-color: var(--c-brand);
+      color: var(--c-brand);
+    }
+
+    .note {
+      font-size: .75rem;
+      color: var(--c-muted);
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 540px) {
+      .card { padding: 36px 24px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating math symbols -->
+  <div class="floaters" aria-hidden="true" id="floaters"></div>
+
+  <div class="card">
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-img-ring">
+        <div class="ripple" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <img src="/logo.png" alt="LidiaI logo" width="56" height="56" />
+      </div>
+      <div class="logo-name">LidiAI<sup>beta</sup></div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-badge">
+      <span class="dot" aria-hidden="true"></span>
+      Entrenando neuronas...
+    </div>
+
+    <!-- Heading -->
+    <h1>Casi <span>lista</span>.<br>Casi mucho.</h1>
+
+    <p class="subtitle">
+      LidiAI está acabando de estudiar — qué irónico, una IA que tiene que estudiar para enseñarte matemáticas. Pronto podrás acceder al login y empezar a generar ejercicios.
+    </p>
+
+    <!-- Math joke -->
+    <div class="joke" role="note" aria-label="Chiste matemático mientras esperas">
+      <p class="joke-label">Chiste de mates mientras esperas</p>
+      <p class="joke-text">— Un alumno le pregunta al profesor: "¿Para qué sirven los números imaginarios?"</p>
+      <p class="joke-punchline">— El profesor responde: "Para imaginarte que has aprobado."</p>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap" aria-label="Progreso de preparacion de LidiaI">
+      <div class="progress-label">
+        <span>Preparación de LidiAI</span>
+        <span id="pct-label">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <a href="/" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Volver al inicio
+      </a>
+      <a href="mailto:contacto@alphaly.es" class="btn btn-ghost">
+        Avisadme cuando este lista
+      </a>
+    </div>
+
+    <p class="note">
+      Si quieres ser de los primeros — escribe a <a href="mailto:contacto@alphaly.es" style="color:var(--c-brand);font-weight:600;">contacto@alphaly.es</a>
+    </p>
+
+  </div>
+
+  <script>
+    // ---- Progress bar animation ----
+    const bar = document.getElementById('progress-bar');
+    const lbl = document.getElementById('pct-label');
+    const target = 73; // feels authentic — not 100, not a round number
+    let current = 0;
+
+    function animateProgress() {
+      if (current < target) {
+        current += 1;
+        bar.style.width = current + '%';
+        bar.setAttribute('aria-valuenow', current);
+        lbl.textContent = current + '%';
+        setTimeout(animateProgress, 28 + Math.random() * 40);
+      }
+    }
+
+    setTimeout(animateProgress, 600);
+
+    // ---- Floating math symbols ----
+    const symbols = [
+      'x²', '∫', 'Δ', '√', 'π', 'α', 'β', '∑', 'f(x)', '∞',
+      'dy/dx', 'log', 'sin', 'cos', 'lim', '±', '∈', 'ℝ', 'n!', 'θ'
+    ];
+    const container = document.getElementById('floaters');
+
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement('span');
+      el.className = 'floater';
+      el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = (12 + Math.random() * 16) + 's';
+      el.style.animationDelay = (-Math.random() * 20) + 's';
+      el.style.fontSize = (.9 + Math.random() * 1.2) + 'rem';
+      container.appendChild(el);
+    }
+  </script>
+
+</body>
+</html>
