@@ -1,0 +1,2958 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlphaLy — Generador de ejercicios de matemáticas con IA</title>
+  <meta name="description"
+    content="AlphaLy convierte cualquier tema de tu libro de mates en ejercicios ilimitados con solucionario. Sube una foto, la IA genera ejercicios, exámenes y explicaciones paso a paso. Powered by LidiaI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+
+
+  <style>
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --c-bg: #f8f9fc;
+      --c-surface: #ffffff;
+      --c-border: #e4e7f0;
+      --c-text: #111827;
+      --c-muted: #6b7280;
+      --c-brand: #4f63d2;
+      --c-brand-dark: #3a4db5;
+      --c-brand-light: #eef0fd;
+      --c-accent: #7c3aed;
+      --c-accent-light: #f3f0ff;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, .07), 0 1px 2px rgba(0, 0, 0, .05);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, .09), 0 2px 6px rgba(0, 0, 0, .05);
+      --shadow-lg: 0 8px 32px rgba(79, 99, 210, .14), 0 2px 8px rgba(0, 0, 0, .06);
+      --radius: 14px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--c-bg);
+      color: var(--c-text);
+      line-height: 1.6;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* =============================================
+       UTILITY
+    ============================================= */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 96px 0;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--c-brand);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+      color: var(--c-text);
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 1.1rem;
+      color: var(--c-muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* fade-in animation triggered by IntersectionObserver */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* stagger children */
+    .reveal-group>* {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .reveal-group.visible>*:nth-child(1) {
+      opacity: 1;
+      transform: none;
+      transition-delay: .05s;
+    }
+
+    .reveal-group.visible>*:nth-child(2) {
+      opacity: 1;
+      transform: none;
+      transition-delay: .15s;
+    }
+
+    .reveal-group.visible>*:nth-child(3) {
+      opacity: 1;
+      transform: none;
+      transition-delay: .25s;
+    }
+
+    .reveal-group.visible>*:nth-child(4) {
+      opacity: 1;
+      transform: none;
+      transition-delay: .35s;
+    }
+
+    .reveal-group.visible>*:nth-child(5) {
+      opacity: 1;
+      transform: none;
+      transition-delay: .45s;
+    }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(248, 249, 252, .88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--c-border);
+      padding: 0 24px;
+    }
+
+    .navbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -.03em;
+      color: var(--c-brand);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--c-muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: color .2s, background .2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--c-text);
+      background: var(--c-brand-light);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font);
+      font-size: .9rem;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      transition: transform .15s, box-shadow .15s, background .2s;
+      line-height: 1;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--c-brand);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(79, 99, 210, .35);
+    }
+
+    .btn-primary:hover {
+      background: var(--c-brand-dark);
+      box-shadow: 0 4px 16px rgba(79, 99, 210, .45);
+    }
+
+    .btn-ghost {
+      background: var(--c-surface);
+      color: var(--c-text);
+      border: 1.5px solid var(--c-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-ghost:hover {
+      background: var(--c-brand-light);
+      border-color: var(--c-brand);
+      color: var(--c-brand);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--c-text);
+      border-radius: 2px;
+      transition: transform .25s, opacity .25s;
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    .hero {
+      padding: 80px 24px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* subtle background pattern */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% -10%, rgba(79, 99, 210, .12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--c-brand-light);
+      color: var(--c-brand);
+      font-size: .82rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(79, 99, 210, .18);
+    }
+
+    .hero-badge span.dot {
+      width: 7px;
+      height: 7px;
+      background: var(--c-brand);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .5;
+        transform: scale(.8);
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      color: var(--c-text);
+    }
+
+    .hero-title .brand {
+      color: var(--c-brand);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--c-muted);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+
+    .hero-cta .btn {
+      font-size: 1rem;
+      padding: 13px 28px;
+    }
+
+    /* ---------- Mockup ---------- */
+    .mockup {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--c-surface);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--c-border);
+      overflow: hidden;
+    }
+
+    .mockup-bar {
+      background: #f0f2f8;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-bottom: 1px solid var(--c-border);
+    }
+
+    .mockup-bar .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .mockup-bar .dot:nth-child(1) {
+      background: #ff6059;
+    }
+
+    .mockup-bar .dot:nth-child(2) {
+      background: #febc2e;
+    }
+
+    .mockup-bar .dot:nth-child(3) {
+      background: #28c840;
+    }
+
+    .mockup-bar .url {
+      margin-left: auto;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 6px;
+      font-size: .78rem;
+      color: var(--c-muted);
+      padding: 3px 12px;
+      font-family: monospace;
+    }
+
+    .mockup-body {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 0;
+    }
+
+    /* ---- Left: upload + analysis panel ---- */
+    .mockup-left {
+      padding: 0;
+      border-right: 1px solid var(--c-border);
+      display: flex;
+      flex-direction: column;
+      background: var(--c-bg);
+    }
+
+    .panel-header {
+      padding: 12px 16px;
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--c-muted);
+      border-bottom: 1px solid var(--c-border);
+      background: var(--c-surface);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .panel-header svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--c-brand);
+      fill: none;
+      stroke-width: 2.2;
+      flex-shrink: 0;
+    }
+
+    /* Page thumbnails grid */
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 14px;
+    }
+
+    .page-thumb {
+      aspect-ratio: 3/4;
+      border-radius: 7px;
+      background: var(--c-surface);
+      border: 1.5px solid var(--c-border);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 6px;
+      gap: 4px;
+    }
+
+    .page-thumb.uploaded {
+      border-color: var(--c-brand);
+      background: var(--c-brand-light);
+    }
+
+    .page-thumb.uploading {
+      border-color: rgba(79, 99, 210, .4);
+      background: var(--c-brand-light);
+      opacity: .7;
+    }
+
+    .page-thumb .page-lines {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      justify-content: center;
+    }
+
+    .page-thumb .page-line {
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(79, 99, 210, .25);
+    }
+
+    .page-thumb .page-line:nth-child(2) {
+      width: 80%;
+    }
+
+    .page-thumb .page-line:nth-child(3) {
+      width: 65%;
+    }
+
+    .page-thumb .page-line:nth-child(5) {
+      width: 75%;
+    }
+
+    .page-thumb .page-line.math {
+      height: 5px;
+      background: rgba(79, 99, 210, .45);
+      border-radius: 3px;
+    }
+
+    .page-thumb .page-label {
+      font-size: .58rem;
+      font-weight: 700;
+      color: var(--c-brand);
+      text-align: center;
+      font-family: var(--font);
+    }
+
+    .page-thumb .page-check {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 14px;
+      height: 14px;
+      background: var(--c-brand);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-thumb .page-check::after {
+      content: '';
+      width: 6px;
+      height: 4px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+    /* Upload add button */
+    .page-add {
+      aspect-ratio: 3/4;
+      border-radius: 7px;
+      border: 1.5px dashed var(--c-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .page-add svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--c-muted);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* AI analysis result */
+    .analysis-box {
+      margin: 0 14px 14px;
+      background: var(--c-surface);
+      border: 1.5px solid var(--c-brand);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .analysis-label {
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--c-brand);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .analysis-label .dot-pulse {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .analysis-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: .75rem;
+      color: var(--c-text);
+      line-height: 1.4;
+    }
+
+    .analysis-row .ak {
+      font-weight: 700;
+      color: var(--c-muted);
+      min-width: 60px;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      flex-shrink: 0;
+    }
+
+    .analysis-row .av {
+      color: var(--c-text);
+      font-weight: 500;
+    }
+
+    .analysis-row .av .math-inline {
+      font-family: 'Caveat', cursive;
+      font-size: .9rem;
+      color: var(--c-brand-dark);
+    }
+
+    /* ---- Right: generator panel ---- */
+    .mockup-right {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--c-surface);
+    }
+
+    .gen-panel-title {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--c-muted);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--c-border);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .gen-panel-title svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--c-brand);
+      fill: none;
+      stroke-width: 2.2;
+    }
+
+    /* Generator action buttons */
+    .gen-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .gen-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--c-border);
+      background: var(--c-bg);
+      font-family: var(--font);
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--c-text);
+      cursor: pointer;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+      text-align: left;
+    }
+
+    .gen-btn:hover {
+      border-color: var(--c-brand);
+      background: var(--c-brand-light);
+    }
+
+    .gen-btn.primary {
+      border-color: var(--c-brand);
+      background: var(--c-brand);
+      color: #fff;
+    }
+
+    .gen-btn.primary:hover {
+      background: var(--c-brand-dark);
+    }
+
+    .gen-btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .gen-btn.primary svg {
+      stroke: #fff;
+    }
+
+    /* Output preview */
+    .gen-output {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .gen-output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gen-output-header strong {
+      font-size: .82rem;
+      color: var(--c-text);
+    }
+
+    .gen-output-header .chip {
+      background: #d1fae5;
+      color: #065f46;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .exercise-item {
+      background: var(--c-bg);
+      border: 1px solid var(--c-border);
+      border-radius: 9px;
+      padding: 10px 12px;
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      font-size: .79rem;
+      color: var(--c-text);
+      line-height: 1.5;
+    }
+
+    .exercise-item .ex-num {
+      min-width: 20px;
+      height: 20px;
+      background: var(--c-brand);
+      color: #fff;
+      border-radius: 5px;
+      font-size: .68rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .exercise-item .ex-math {
+      font-family: 'Caveat', cursive;
+      font-size: .95rem;
+      color: var(--c-brand-dark);
+    }
+
+    .gen-more {
+      text-align: center;
+      font-size: .72rem;
+      color: var(--c-muted);
+      padding: 6px 0 2px;
+    }
+
+    /* =============================================
+       HOW IT WORKS
+    ============================================= */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .how-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s, transform .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .how-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--c-brand);
+      border-radius: 3px 3px 0 0;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s ease;
+    }
+
+    .how-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+    }
+
+    .how-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .how-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--c-brand-light);
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .how-icon svg {
+      width: 26px;
+      height: 26px;
+      color: var(--c-brand);
+    }
+
+    .how-step {
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--c-brand);
+      margin-bottom: 8px;
+    }
+
+    .how-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .how-card p {
+      font-size: .92rem;
+      color: var(--c-muted);
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       BENEFITS
+    ============================================= */
+    .benefits-section {
+      background: var(--c-surface);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 56px;
+    }
+
+    .benefit-card {
+      background: var(--c-bg);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      padding: 24px 22px;
+      transition: box-shadow .2s, transform .2s;
+    }
+
+    .benefit-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .benefit-icon {
+      font-size: 1.8rem;
+      margin-bottom: 14px;
+      width: 44px;
+      height: 44px;
+      background: var(--c-brand-light);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .benefit-icon svg {
+      width: 22px;
+      height: 22px;
+      color: var(--c-brand);
+    }
+
+    .benefit-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .benefit-card p {
+      font-size: .88rem;
+      color: var(--c-muted);
+      line-height: 1.55;
+    }
+
+    /* =============================================
+       LIDIAI SECTION
+    ============================================= */
+    .lidiai-section {
+      padding: 96px 0;
+      background: var(--c-bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lidiai-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 55% 60% at 100% 50%, rgba(79, 99, 210, .07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .lidiai-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    /* Avatar / logo card */
+    .lidiai-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .lidiai-logo-ring {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      flex-shrink: 0;
+    }
+
+    .lidiai-logo-ring img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Ripple circles — speaker/sonar pulse effect */
+    .lidiai-ripple {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .lidiai-ripple span {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--c-brand);
+      opacity: 0;
+      animation: lidiai-ripple 3s ease-out infinite;
+    }
+
+    .lidiai-ripple span:nth-child(1) { animation-delay: 0s; }
+    .lidiai-ripple span:nth-child(2) { animation-delay: .9s; }
+    .lidiai-ripple span:nth-child(3) { animation-delay: 1.8s; }
+
+    @keyframes lidiai-ripple {
+      0%   { transform: scale(1);    opacity: .7; border-color: var(--c-brand); }
+      50%  { opacity: .3; border-color: #6ee7ff; }
+      100% { transform: scale(1.9);  opacity: 0; border-color: var(--c-brand); }
+    }
+
+    .lidiai-name-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--c-surface);
+      border: 1.5px solid var(--c-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lidiai-name-badge .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .lidiai-name-badge strong {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--c-text);
+      letter-spacing: -.01em;
+    }
+
+    .lidiai-name-badge span {
+      font-size: .78rem;
+      color: var(--c-muted);
+    }
+
+    /* Text side */
+    .lidiai-content {}
+
+    .lidiai-content .section-sub {
+      max-width: 480px;
+      margin-bottom: 32px;
+    }
+
+    .lidiai-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .lidiai-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--c-surface);
+      border: 1.5px solid var(--c-border);
+      border-radius: 99px;
+      padding: 7px 16px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--c-text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lidiai-pill .pill-icon {
+      font-size: .9rem;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lidiai-pill svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--c-brand);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .lidiai-trainer {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--c-brand-light);
+      border: 1.5px solid rgba(79, 99, 210, .18);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .lidiai-trainer-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--c-brand);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lidiai-trainer-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .lidiai-trainer-text p {
+      font-size: .82rem;
+      color: var(--c-brand-dark);
+      line-height: 1.6;
+    }
+
+    .lidiai-trainer-text strong {
+      display: block;
+      font-size: .88rem;
+      color: var(--c-brand-dark);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    /* =============================================
+       LIDIA SECTION
+    ============================================= */
+    .lidia-section {
+      background: var(--c-text);
+      color: #fff;
+      padding: 72px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lidia-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 80% at 80% 50%, rgba(79, 99, 210, .25) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .lidia-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+    }
+
+    .lidia-eyebrow {
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: rgba(255, 255, 255, .45);
+      margin-bottom: 16px;
+    }
+
+    .lidia-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      margin-bottom: 40px;
+      color: #fff;
+    }
+
+    /* ---------- Ticker / progress bar ---------- */
+    .ticker-wrap {
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+
+    .ticker-label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255, 255, 255, .4);
+      margin-bottom: 18px;
+    }
+
+    .week-track {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .day-item {
+      flex: 1;
+      text-align: center;
+      padding: 10px 4px;
+      position: relative;
+    }
+
+    .day-item::after {
+      content: '→';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, .25);
+      font-size: .85rem;
+    }
+
+    .day-item:last-child::after {
+      display: none;
+    }
+
+    .day-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .2);
+      margin: 0 auto 7px;
+      transition: background .4s, box-shadow .4s;
+    }
+
+    .day-item.active .day-dot {
+      background: #4f63d2;
+      box-shadow: 0 0 0 4px rgba(79, 99, 210, .35);
+      animation: glow 2s infinite;
+    }
+
+    .day-item.done .day-dot {
+      background: rgba(255, 255, 255, .5);
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 4px rgba(79, 99, 210, .35);
+      }
+
+      50% {
+        box-shadow: 0 0 0 7px rgba(79, 99, 210, .15);
+      }
+    }
+
+    .day-name {
+      font-size: .82rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .55);
+      transition: color .3s;
+    }
+
+    .day-item.active .day-name {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .day-item.done .day-name {
+      color: rgba(255, 255, 255, .75);
+    }
+
+    .day-sub {
+      font-size: .68rem;
+      color: rgba(255, 255, 255, .3);
+      margin-top: 4px;
+      transition: color .3s;
+    }
+
+    .day-item.active .day-sub {
+      color: rgba(255, 255, 255, .6);
+    }
+
+    .day-item.done .day-sub {
+      color: rgba(255, 255, 255, .45);
+    }
+
+    /* scrolling marquee for mobile fallback */
+    .lidia-marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      margin-top: 18px;
+      padding-top: 16px;
+    }
+
+    .lidia-marquee {
+      display: flex;
+      gap: 48px;
+      animation: marquee 18s linear infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .lidia-marquee span {
+      font-size: .82rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .4);
+    }
+
+    .lidia-marquee span.highlight {
+      color: #4f63d2;
+      font-weight: 700;
+    }
+
+    .lidia-caption {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, .7);
+      font-style: italic;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .lidia-caption strong {
+      color: #fff;
+      font-style: normal;
+    }
+
+    /* =============================================
+       TESTIMONIALS
+    ============================================= */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .testimonial-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s, transform .2s;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .testimonial-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+    }
+
+    .stars {
+      display: flex;
+      gap: 3px;
+    }
+
+    .stars svg {
+      width: 16px;
+      height: 16px;
+      fill: #f59e0b;
+    }
+
+    .testimonial-text {
+      font-size: .95rem;
+      line-height: 1.65;
+      color: var(--c-text);
+      flex: 1;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: .95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+    }
+
+    .avatar-blue {
+      background: linear-gradient(135deg, #4f63d2, #7c3aed);
+    }
+
+    .avatar-teal {
+      background: linear-gradient(135deg, #0d9488, #059669);
+    }
+
+    .avatar-amber {
+      background: linear-gradient(135deg, #d97706, #dc2626);
+    }
+
+    .author-info strong {
+      font-size: .9rem;
+      display: block;
+    }
+
+    .author-info span {
+      font-size: .8rem;
+      color: var(--c-muted);
+    }
+
+    /* =============================================
+       FAQ
+    ============================================= */
+    .faq-section {
+      background: var(--c-surface);
+    }
+
+    .faq-list {
+      max-width: 720px;
+      margin: 56px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--c-bg);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      font-size: .97rem;
+      font-weight: 600;
+      color: var(--c-text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font);
+      gap: 12px;
+      transition: background .2s;
+    }
+
+    .faq-question:hover {
+      background: var(--c-brand-light);
+    }
+
+    .faq-chevron {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      border-radius: 6px;
+      background: var(--c-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s, transform .3s;
+    }
+
+    .faq-chevron svg {
+      width: 12px;
+      height: 12px;
+      color: var(--c-muted);
+      transition: color .2s;
+    }
+
+    .faq-item.open .faq-chevron {
+      background: var(--c-brand);
+      transform: rotate(180deg);
+    }
+
+    .faq-item.open .faq-chevron svg {
+      color: #fff;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .25s;
+      padding: 0 24px;
+    }
+
+    .faq-answer p {
+      font-size: .9rem;
+      color: var(--c-muted);
+      line-height: 1.65;
+      padding-bottom: 20px;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      padding-top: 0;
+    }
+
+    /* =============================================
+       INTERACTIVE GRAPHER SECTION
+    ============================================= */
+    .grapher-section {
+      padding: 96px 0;
+      background: var(--c-surface);
+    }
+
+    .grapher-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 56px;
+      align-items: start;
+      margin-top: 56px;
+    }
+
+    .grapher-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .grapher-fn-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .grapher-fn-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--c-bg);
+      border: 1.5px solid var(--c-border);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--c-text);
+      text-align: left;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+
+    .grapher-fn-btn:hover {
+      border-color: var(--c-brand);
+      background: var(--c-brand-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .grapher-fn-btn.active {
+      border-color: var(--c-brand);
+      background: var(--c-brand-light);
+      box-shadow: 0 0 0 3px rgba(79, 99, 210, .12);
+    }
+
+    .grapher-fn-btn .fn-label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--c-brand);
+      min-width: 120px;
+    }
+
+    .grapher-fn-btn .fn-name {
+      font-size: .8rem;
+      color: var(--c-muted);
+      font-weight: 500;
+    }
+
+    .grapher-canvas-wrap {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1.5px solid var(--c-border);
+      box-shadow: var(--shadow-md);
+      background: #0f172a;
+    }
+
+    .grapher-canvas-wrap canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .grapher-canvas-label {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: rgba(255, 255, 255, .35);
+      font-family: var(--font);
+    }
+
+    .grapher-canvas-fn {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, .7);
+    }
+
+    /* =============================================
+       CTA BANNER
+    ============================================= */
+    .cta-banner {
+      background: var(--c-brand);
+      padding: 72px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 120% at 50% 50%, rgba(255, 255, 255, .08) 0%, transparent 70%);
+    }
+
+    .cta-banner h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .cta-banner p {
+      color: rgba(255, 255, 255, .75);
+      font-size: 1.05rem;
+      margin-bottom: 36px;
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--c-brand-dark);
+      font-weight: 700;
+      padding: 14px 32px;
+      font-size: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
+    }
+
+    .btn-white:hover {
+      background: #f0f2ff;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--c-text);
+      color: rgba(255, 255, 255, .6);
+      padding: 48px 24px;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+      letter-spacing: -.02em;
+    }
+
+    .footer-logo .logo-icon {
+      background: transparent;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: .85rem;
+      color: rgba(255, 255, 255, .5);
+      transition: color .2s;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    .footer-copy {
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .3);
+    }
+
+    /* =============================================
+       MOBILE NAV
+    ============================================= */
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      background: var(--c-surface);
+      border-top: 1px solid var(--c-border);
+      padding: 16px 24px 20px;
+      gap: 8px;
+    }
+
+    .mobile-nav a {
+      font-size: .95rem;
+      font-weight: 500;
+      color: var(--c-text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      transition: background .2s;
+    }
+
+    .mobile-nav a:hover {
+      background: var(--c-brand-light);
+      color: var(--c-brand);
+    }
+
+    .mobile-nav .btn {
+      margin-top: 8px;
+      justify-content: center;
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 860px) {
+
+      .nav-links,
+      .navbar-cta {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .mobile-nav.open {
+        display: flex;
+      }
+
+      .how-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lidiai-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .lidiai-visual {
+        order: -1;
+      }
+
+      .grapher-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mockup-body {
+        grid-template-columns: 1fr;
+      }
+
+      .mockup-left {
+        border-right: none;
+        border-bottom: 1px solid var(--c-border);
+      }
+
+      .chalkboard {
+        min-height: 180px;
+        padding: 16px;
+      }
+
+      .week-track {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+      }
+
+      .day-item::after {
+        display: none;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section {
+        padding: 64px 0;
+      }
+
+      .hero {
+        padding: 48px 24px 56px;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .lidia-title {
+        font-size: 1.4rem;
+      }
+
+      .ticker-wrap {
+        padding: 20px 16px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .day-name {
+        font-size: .7rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="navbar-inner">
+      <a href="#" class="logo" aria-label="AlphaLy — inicio">
+        <div class="logo-icon">
+          <img src="/logo.png" alt="AlphaLy logo" width="36" height="36" />
+        </div>
+        AlphaLy
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#lidiai">LidiAI</a></li>
+        <li><a href="#beneficios">Beneficios</a></li>
+        <li><a href="#graficadora">Graficadora</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="navbar-cta">
+        <a href="#hero" class="btn btn-primary">Probar demo</a>
+      </div>
+
+      <button class="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-nav"
+        id="hamburger-btn">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile nav -->
+    <div class="mobile-nav" id="mobile-nav" role="menu">
+      <a href="#como-funciona" role="menuitem">Como funciona</a>
+      <a href="#lidiai" role="menuitem">LidiAI</a>
+      <a href="#beneficios" role="menuitem">Beneficios</a>
+      <a href="#graficadora" role="menuitem">Graficadora</a>
+      <a href="#faq" role="menuitem">FAQ</a>
+      <a href="#hero" class="btn btn-primary" role="menuitem">Probar demo</a>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <main>
+    <section class="hero" id="hero" aria-labelledby="hero-heading">
+      <div class="reveal">
+        <div class="hero-badge">
+          <span class="dot" aria-hidden="true"></span>
+            Powered by LidiAI — IA experta en mates
+        </div>
+
+        <h1 class="hero-title" id="hero-heading">
+          Tu libro de mates,<br><span class="brand">ejercicios infinitos</span>
+        </h1>
+
+          <p class="hero-sub">
+          Sube una foto de cualquier tema de tu libro. AlphaLy genera ejercicios nuevos, exámenes completos y solucionarios paso a paso de forma automática — con la IA entrenada por una profesora de verdad.
+        </p>
+
+        <div class="hero-cta">
+          <a href="/demo.html" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              aria-hidden="true">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            Probar demo
+          </a>
+          <a href="#como-funciona" class="btn btn-ghost">
+            Ver como funciona
+          </a>
+        </div>
+      </div>
+
+      <!-- Mockup UI -->
+      <div class="mockup reveal" aria-label="Vista previa de la interfaz de AlphaLy" role="img">
+        <div class="mockup-bar">
+          <div class="dot" aria-hidden="true"></div>
+          <div class="dot" aria-hidden="true"></div>
+          <div class="dot" aria-hidden="true"></div>
+          <span class="url">app.alphaly.es</span>
+        </div>
+        <div class="mockup-body">
+
+          <!-- Left: upload + AI analysis panel -->
+          <div class="mockup-left" aria-label="Panel de subida y analisis del tema">
+            <div class="panel-header">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+              Paginas del libro subidas
+            </div>
+
+            <div class="pages-grid" aria-label="Miniaturas de paginas subidas">
+              <!-- Page 1 — uploaded -->
+              <div class="page-thumb uploaded" aria-label="Pagina 1 cargada">
+                <div class="page-check" aria-hidden="true"></div>
+                <div class="page-lines">
+                  <div class="page-line"></div>
+                  <div class="page-line math"></div>
+                  <div class="page-line"></div>
+                  <div class="page-line math"></div>
+                  <div class="page-line"></div>
+                </div>
+                <span class="page-label">Pag. 1</span>
+              </div>
+              <!-- Page 2 — uploaded -->
+              <div class="page-thumb uploaded" aria-label="Pagina 2 cargada">
+                <div class="page-check" aria-hidden="true"></div>
+                <div class="page-lines">
+                  <div class="page-line math"></div>
+                  <div class="page-line"></div>
+                  <div class="page-line"></div>
+                  <div class="page-line math"></div>
+                  <div class="page-line"></div>
+                </div>
+                <span class="page-label">Pag. 2</span>
+              </div>
+              <!-- Page 3 — uploaded -->
+              <div class="page-thumb uploaded" aria-label="Pagina 3 cargada">
+                <div class="page-check" aria-hidden="true"></div>
+                <div class="page-lines">
+                  <div class="page-line"></div>
+                  <div class="page-line"></div>
+                  <div class="page-line math"></div>
+                  <div class="page-line"></div>
+                  <div class="page-line math"></div>
+                </div>
+                <span class="page-label">Pag. 3</span>
+              </div>
+              <!-- Add more -->
+              <div class="page-add" role="button" aria-label="Subir mas paginas">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- AI analysis result -->
+            <div class="analysis-box" role="region" aria-label="Analisis del tema detectado por LidiaI">
+              <div class="analysis-label">
+                <span class="dot-pulse" aria-hidden="true"></span>
+                LidiAI — tema analizado
+              </div>
+              <div class="analysis-row">
+                <span class="ak">Tema</span>
+                <span class="av">Ecuaciones de 2.° grado</span>
+              </div>
+              <div class="analysis-row">
+                <span class="ak">Conceptos</span>
+                <span class="av"><span class="math-inline">x = (-b ± √Δ) / 2a</span>, discriminante</span>
+              </div>
+              <div class="analysis-row">
+                <span class="ak">Nivel</span>
+                <span class="av">Secundaria — 4.° ESO</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: generator panel -->
+          <div class="mockup-right" aria-label="Panel generador de material">
+            <div class="gen-panel-title">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+              Generar material con LidiAI
+            </div>
+
+            <div class="gen-actions" role="group" aria-label="Acciones de generacion">
+              <button class="gen-btn primary" type="button">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                Lista de practica
+              </button>
+              <button class="gen-btn" type="button">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                  <path d="M8 14h2M14 14h2M8 18h2" />
+                </svg>
+                Generar examen
+              </button>
+              <button class="gen-btn" type="button">
+                <svg viewBox="0 0 24 24">
+                  <path d="M18 20V10" />
+                  <path d="M12 20V4" />
+                  <path d="M6 20v-6" />
+                </svg>
+                Nivel facil
+              </button>
+              <button class="gen-btn" type="button">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 20V10" />
+                  <path d="M12 20V4" />
+                  <path d="M18 20v-6" />
+                </svg>
+                Nivel dificil
+              </button>
+            </div>
+
+            <!-- Generated output preview -->
+            <div class="gen-output" aria-label="Ejercicios generados">
+              <div class="gen-output-header">
+                <strong>Lista de practica generada</strong>
+                <span class="chip">10 ejercicios</span>
+              </div>
+              <div class="exercise-item">
+                <span class="ex-num">1</span>
+                <span>Resuelve: <span class="ex-math">3x² − 7x + 2 = 0</span></span>
+              </div>
+              <div class="exercise-item">
+                <span class="ex-num">2</span>
+                <span>Resuelve: <span class="ex-math">x² + 4x − 12 = 0</span></span>
+              </div>
+              <div class="exercise-item">
+                <span class="ex-num">3</span>
+                <span>Calcula el discriminante de <span class="ex-math">2x² − 5x + 3 = 0</span></span>
+              </div>
+              <p class="gen-more">+ 7 ejercicios mas con solucionario incluido</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CÓMO FUNCIONA ============ -->
+    <section class="section" id="como-funciona" aria-labelledby="como-heading">
+      <div class="container">
+        <div class="reveal" style="text-align:center;">
+          <p class="section-label">El proceso</p>
+          <h2 class="section-title" id="como-heading">Tres pasos. Ejercicios infinitos.</h2>
+          <p class="section-sub" style="margin:0 auto;">Convierte cualquier página de tu libro en una fuente ilimitada de práctica. Sin inventar nada, sin perder el tiempo.</p>
+        </div>
+
+        <div class="how-grid reveal-group">
+          <article class="how-card">
+            <div class="how-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+            </div>
+            <p class="how-step">Paso 01</p>
+            <h3>Sube una foto del tema</h3>
+            <p>Fotografía la página de tu libro — ecuaciones, derivadas, fracciones, geometría, lo que sea. El OCR lee el texto y las fórmulas matemáticas al instante.</p>
+          </article>
+
+          <article class="how-card">
+            <div class="how-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <p class="how-step">Paso 02</p>
+            <h3>LidiAI entiende el contenido</h3>
+            <p>La IA analiza el tema, identifica el tipo de ejercicios y comprende las fórmulas. Clasifica el contenido y elige la mejor estrategia según el nivel.</p>
+          </article>
+
+          <article class="how-card">
+            <div class="how-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+              </svg>
+            </div>
+            <p class="how-step">Paso 03</p>
+            <h3>Ejercicios, exámenes y solucionario</h3>
+            <p>Recibe listas de ejercicios nuevos, controles completos o explicaciones paso a paso. Ajusta la dificultad y genera tantos como quieras, siempre sobre el mismo tema.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BENEFICIOS ============ -->
+    <section class="section benefits-section" id="beneficios" aria-labelledby="beneficios-heading">
+      <div class="container">
+        <div class="reveal" style="text-align:center;">
+          <p class="section-label">Por que AlphaLy</p>
+          <h2 class="section-title" id="beneficios-heading">Todo lo que necesitas para las mates.</h2>
+          <p class="section-sub" style="margin:0 auto;">Para alumnos que quieren entender de verdad, y para profes que
+            no quieren preparar material desde cero.</p>
+        </div>
+
+        <div class="benefits-grid reveal-group">
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            </div>
+            <h3>Ejercicios nuevos al instante</h3>
+            <p>Genera listas completas de ejercicios similares a los del libro con un solo clic. Practica todo lo que quieras.</p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+            <h3>Solucionario paso a paso</h3>
+            <p>Cada ejercicio generado incluye su solución detallada con el razonamiento completo, no solo el resultado final.</p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 20V10" />
+                <path d="M12 20V4" />
+                <path d="M6 20v-6" />
+              </svg>
+            </div>
+            <h3>Ajusta la dificultad</h3>
+            <p>Elige entre fácil, medio o difícil. AlphaLy adapta los ejercicios al nivel del alumno para que el aprendizaje sea progresivo.</p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <h3>Para alumnos y profes</h3>
+            <p>Los alumnos practican sin límite; los profes preparan exámenes y materiales en minutos, no en horas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LIDIAI ============ -->
+    <section class="lidiai-section" id="lidiai" aria-labelledby="lidiai-heading">
+      <div class="container">
+        <div class="lidiai-grid">
+
+          <!-- Visual: logo + badge -->
+          <div class="lidiai-visual reveal">
+            <div class="lidiai-logo-ring">
+              <div class="lidiai-ripple" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <img src="/logo.png" alt="LidiAI — IA matemática de AlphaLy" width="180" height="180" />
+            </div>
+            <div class="lidiai-name-badge">
+              <span class="badge-dot" aria-hidden="true"></span>
+              <strong>LidiAI</strong>
+              <span>IA activa</span>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="lidiai-content reveal">
+            <p class="section-label">Conoce a LidiAI</p>
+            <h2 class="section-title" id="lidiai-heading" style="text-wrap:balance;">La IA que entiende las mates como una profesora de verdad</h2>
+            <p class="section-sub">
+              LidiAI no es un chatbot genérico. Es una IA especializada en matemáticas, entrenada por Lidia — profesora de mates con años de experiencia en las aulas. Cada explicación, cada ejercicio, cada corrección lleva el sello de quien sabe de qué habla.
+            </p>
+
+            <div class="lidiai-pills">
+              <div class="lidiai-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 12l2 2 4-4" />
+                  <circle cx="12" cy="12" r="9" />
+                </svg>
+                Pasos explicados, no solo resultados
+              </div>
+              <div class="lidiai-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+                Temario ESO y Bachillerato
+              </div>
+              <div class="lidiai-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                Genera ejercicios de práctica al instante
+              </div>
+              <div class="lidiai-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+                Corrige errores con precisión de profe
+              </div>
+            </div>
+
+            <div class="lidiai-trainer">
+              <div class="lidiai-trainer-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                  <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg>
+              </div>
+              <div class="lidiai-trainer-text">
+                <strong>Entrenada por una profesora real</strong>
+                <p>Lidia ha revisado, corregido y validado cada respuesta que LidiAI da. No es IA a secas — es IA con criterio docente.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EL GUIÑO DE LIDIA ============ -->
+    <section class="lidia-section" id="lidia" aria-labelledby="lidia-heading">
+      <div class="lidia-inner">
+        <p class="lidia-eyebrow reveal">El guiño de la profe</p>
+        <h2 class="lidia-title reveal" id="lidia-heading">La semana de Lidia</h2>
+
+        <div class="ticker-wrap reveal" aria-label="La semana según Lidia">
+          <p class="ticker-label">Lidia™ — sistema oficial de medición del tiempo</p>
+          <div class="week-track" id="week-track" role="list">
+            <div class="day-item" role="listitem" data-day="1">
+              <div class="day-dot"></div>
+              <p class="day-name">Lunes</p>
+              <p class="day-sub">casi martes</p>
+            </div>
+            <div class="day-item" role="listitem" data-day="2">
+              <div class="day-dot"></div>
+              <p class="day-name">Martes</p>
+              <p class="day-sub">casi miércoles</p>
+            </div>
+            <div class="day-item" role="listitem" data-day="3">
+              <div class="day-dot"></div>
+              <p class="day-name">Miércoles</p>
+              <p class="day-sub">casi jueves</p>
+            </div>
+            <div class="day-item" role="listitem" data-day="4">
+              <div class="day-dot"></div>
+              <p class="day-name">Jueves</p>
+              <p class="day-sub">casi viernes</p>
+            </div>
+            <div class="day-item" role="listitem" data-day="5">
+              <div class="day-dot"></div>
+              <p class="day-name">Viernes</p>
+              <p class="day-sub">viernes</p>
+            </div>
+          </div>
+
+          <div class="lidia-marquee-wrap" aria-hidden="true">
+            <div class="lidia-marquee" id="lidia-marquee">
+              <span>lunes</span><span>→</span><span>casi martes</span><span>→</span>
+              <span>casi miércoles</span><span>→</span><span>casi jueves</span><span>→</span>
+              <span class="highlight">casi viernes 🎉</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <span>lunes</span><span>→</span><span>casi martes</span><span>→</span>
+              <span>casi miércoles</span><span>→</span><span>casi jueves</span><span>→</span>
+              <span class="highlight">casi viernes 🎉</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="lidia-caption reveal" id="lidia-caption">
+          Hoy es <strong id="lidia-day-name">lunes</strong>. Pero Lidia ya dice <strong id="lidia-day-phrase">"casi martes"</strong>. Menos excusas, más AlphaLy.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIOS ============ -->
+    <section class="section" id="testimonios" aria-labelledby="testimonios-heading" hidden>
+      <div class="container">
+        <div class="testimonials-grid reveal-group" style="display:none">
+          <article class="testimonial-card">
+            <div class="stars" aria-label="5 de 5 estrellas">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+            <p class="testimonial-text">
+              "Llevaba semanas sin entender los logaritmos. Subí un par de fotos y en 5 minutos lo pillé. Antes de
+              AlphaLy, lo más cerca que estuve de entenderlos fue soñando con ellos."
+            </p>
+            <div class="testimonial-author">
+              <div class="avatar avatar-blue" aria-hidden="true">A</div>
+              <div class="author-info">
+                <strong>Alejandro M.</strong>
+                <span>2º Bachillerato · Sevilla</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars" aria-label="5 de 5 estrellas">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+            <p class="testimonial-text">
+              "El generador de ejercicios me ha salvado la vida para repasar antes de los exámenes. Hago 10 problemas
+              similares hasta que me queda claro. Mi nota de mates pasó de un 4 a un 7."
+            </p>
+            <div class="testimonial-author">
+              <div class="avatar avatar-teal" aria-hidden="true">S</div>
+              <div class="author-info">
+                <strong>Sara G.</strong>
+                <span>4º ESO · Madrid</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars" aria-label="5 de 5 estrellas">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+            <p class="testimonial-text">
+              "Uso AlphaLy para preparar mis exámenes tipo test. Genero baterías de ejercicios por tema y los corrijo
+              automáticamente. Me ahorra literalmente horas cada semana."
+            </p>
+            <div class="testimonial-author">
+              <div class="avatar avatar-amber" aria-hidden="true">L</div>
+              <div class="author-info">
+                <strong>Lidia R.</strong>
+                <span>Profesora de Matemáticas · ESO/Bach</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section faq-section" id="faq" aria-labelledby="faq-heading">
+      <div class="container">
+        <div class="reveal" style="text-align:center;">
+          <p class="section-label">Preguntas frecuentes</p>
+          <h2 class="section-title" id="faq-heading">¿Tienes dudas? Normal.</h2>
+          <p class="section-sub" style="margin:0 auto;">Si no encuentras lo que buscas, escríbenos a
+            contacto@alphaly.es.</p>
+        </div>
+
+        <div class="faq-list reveal" role="list">
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              ¿Funciona con fotos borrosas o de mala calidad?
+              <span class="faq-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </button>
+            <div class="faq-answer" role="region">
+              <p>Nuestro OCR está entrenado para manejar fotos con iluminación irregular, ángulos torcidos y letra
+                manuscrita (incluso difícil de leer). En casos extremos, la IA te avisará de lo que no ha podido
+                interpretar correctamente.</p>
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              ¿Da solo la respuesta o explica el proceso?
+              <span class="faq-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </button>
+            <div class="faq-answer" role="region">
+              <p>Siempre explica el proceso completo, paso a paso. No somos una copiadora de respuestas: el objetivo es
+                que entiendas el razonamiento para que puedas hacerlo tú solo en el examen.</p>
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              ¿Sirve tanto para ESO como para Bachillerato?
+              <span class="faq-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </button>
+            <div class="faq-answer" role="region">
+              <p>Sí, cubre todos los niveles: desde 1º ESO hasta 2º Bachillerato, incluyendo Matemáticas Aplicadas y
+                Matemáticas de modalidad de Ciencias. También funciona con contenido universitario de primer ciclo.</p>
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              ¿Necesito registrarme para usarlo?
+              <span class="faq-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </button>
+            <div class="faq-answer" role="region">
+              <p>Puedes probar la demo sin registrarte. Para guardar tu historial, generar ejercicios ilimitados y
+                acceder a todas las funciones, necesitarás una cuenta gratuita.</p>
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              ¿Mis fotos y datos están seguros?
+              <span class="faq-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+            </button>
+            <div class="faq-answer" role="region">
+              <p>Sí. Las fotos se procesan en servidores cifrados, no se comparten con terceros y puedes eliminarlas en
+                cualquier momento desde tu perfil. Cumplimos con el RGPD y la normativa española de protección de datos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIOS removed ============ -->
+
+    <!-- ============ GRAFICADORA INTERACTIVA ============ -->
+    <section class="grapher-section" id="graficadora" aria-labelledby="grapher-heading">
+      <div class="container">
+        <div class="reveal" style="text-align:center;">
+          <p class="section-label">Visualizacion matematica</p>
+          <h2 class="section-title" id="grapher-heading">Entiende las funciones viendolas</h2>
+          <p class="section-sub" style="margin:0 auto;">AlphaLy no solo genera ejercicios — tambien te ayuda a
+            visualizar las matematicas. Selecciona una funcion y observa su comportamiento en tiempo real.</p>
+        </div>
+
+        <div class="grapher-layout reveal">
+          <!-- Function picker -->
+          <div class="grapher-controls">
+            <p
+              style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);">
+              Selecciona una funcion</p>
+            <div class="grapher-fn-list" id="fn-list" role="listbox" aria-label="Funciones matematicas">
+              <button class="grapher-fn-btn active" data-fn="parabola" role="option" aria-selected="true">
+                <span class="fn-label">f(x) = x²</span>
+                <span class="fn-name">Parabola — funcion cuadratica</span>
+              </button>
+              <button class="grapher-fn-btn" data-fn="seno" role="option" aria-selected="false">
+                <span class="fn-label">f(x) = sen(x)</span>
+                <span class="fn-name">Funcion trigonometrica</span>
+              </button>
+              <button class="grapher-fn-btn" data-fn="cubica" role="option" aria-selected="false">
+                <span class="fn-label">f(x) = x³ − 3x</span>
+                <span class="fn-name">Funcion cubica con puntos criticos</span>
+              </button>
+              <button class="grapher-fn-btn" data-fn="exponencial" role="option" aria-selected="false">
+                <span class="fn-label">f(x) = eˣ</span>
+                <span class="fn-name">Funcion exponencial</span>
+              </button>
+              <button class="grapher-fn-btn" data-fn="logaritmo" role="option" aria-selected="false">
+                <span class="fn-label">f(x) = ln(x)</span>
+                <span class="fn-name">Funcion logaritmica</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Canvas grapher -->
+          <div class="grapher-canvas-wrap">
+            <span class="grapher-canvas-label" aria-hidden="true">AlphaLy Grapher</span>
+            <canvas id="fn-canvas" width="560" height="380" aria-label="Grafica de la funcion seleccionada"></canvas>
+            <span class="grapher-canvas-fn" id="grapher-fn-label" aria-hidden="true">f(x) = x²</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRECIOS ============ -->
+    <section class="section" id="precios" aria-labelledby="precios-heading" style="background:var(--c-surface);">
+      <div class="container">
+        <div class="reveal" style="text-align:center;">
+          <p class="section-label">Precio</p>
+          <h2 class="section-title" id="precios-heading">Sin suscripciones raras. Sin letra pequeña.</h2>
+          <p class="section-sub" style="margin:0 auto 48px;">Un precio claro para todo el año.</p>
+        </div>
+        <div class="reveal" style="max-width:420px;margin:0 auto;">
+          <div style="background:var(--c-bg);border:2px solid var(--c-brand);border-radius:20px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--c-brand),#6ee7ff,var(--c-brand));"></div>
+            <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--c-brand);margin-bottom:16px;">Acceso completo</p>
+            <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;margin-bottom:8px;">
+              <span style="font-size:3.2rem;font-weight:900;letter-spacing:-.04em;color:var(--c-text);line-height:1;">100€</span>
+              <span style="font-size:1rem;color:var(--c-muted);padding-bottom:6px;">pago único</span>
+            </div>
+            <p style="font-size:.85rem;color:var(--c-muted);margin-bottom:28px;">Una vez y para siempre. Sin renovaciones, sin sorpresas.</p>
+            <ul style="list-style:none;text-align:left;display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
+              <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                Ejercicios ilimitados de cualquier tema
+              </li>
+              <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                Solucionario paso a paso incluido
+              </li>
+              <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                LidiaI — IA entrenada por profesora real
+              </li>
+              <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                Graficadora interactiva de funciones
+              </li>
+              <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                Todo el temario ESO y Bachillerato
+              </li>
+            </ul>
+            <a href="/demo.html" class="btn btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:14px 0;">
+              Probar demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA BANNER ============ -->
+    <section class="cta-banner" aria-labelledby="cta-heading">
+      <div class="reveal">
+        <h2 id="cta-heading">100€, pago único. Ejercicios infinitos.</h2>
+        <p>Sin sorpresas. Sin letra pequeña. Solo mates que se entienden.</p>
+        <a href="/demo.html" class="btn btn-white">Probar demo →</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <a href="#" class="footer-logo" aria-label="AlphaLy — inicio">
+        <div class="logo-icon">
+          <img src="/logo.png" alt="AlphaLy logo" width="36" height="36" />
+        </div>
+        AlphaLy
+      </a>
+
+      <nav class="footer-links" aria-label="Pie de página">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos de uso</a>
+        <a href="mailto:contacto@alphaly.es">contacto@alphaly.es</a>
+      </nav>
+
+      <p class="footer-copy">© 2025 AlphaLy. Hecho con ☕ y ecuaciones.</p>
+    </div>
+  </footer>
+
+  <!-- ============ JS ============ -->
+  <script>
+    // ---- Hamburger menu ----
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileNav.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Close mobile nav on link click
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', false);
+      });
+    });
+
+    // ---- FAQ accordion ----
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-question').setAttribute('aria-expanded', false);
+        });
+
+        // Open clicked if it was closed
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', true);
+        }
+      });
+    });
+
+    // ---- Intersection Observer for reveal animations ----
+    const revealEls = document.querySelectorAll('.reveal, .reveal-group');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    // ---- Lidia's week ticker: highlight the REAL current day ----
+    // JS getDay() returns 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    // Our data-day attributes: 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri
+    const dayItems = document.querySelectorAll('.day-item');
+    const todayJS = new Date().getDay(); // 0-6
+
+    // Lidia's expressions: what she calls each weekday
+    // key = JS day number, value = [official name, what Lidia calls it]
+    const lidiaMap = {
+      1: ['lunes', 'casi martes'],
+      2: ['martes', 'casi miércoles'],
+      3: ['miércoles', 'casi jueves'],
+      4: ['jueves', 'casi viernes'],
+      5: ['viernes', 'casi fin de semana'],
+      6: ['sabado', 'casi lunes... ay'],
+      0: ['domingo', 'ya casi lunes... ay']
+    };
+
+    // Map JS day to our 1-5 track index; weekends fall on Friday (index 5)
+    function jsToTrack(jsDay) {
+      if (jsDay === 0 || jsDay === 6) return 5; // weekend → Friday lit
+      return jsDay; // 1-5 directly
+    }
+
+    const activeTrack = jsToTrack(todayJS);
+
+    dayItems.forEach(d => {
+      const dDay = parseInt(d.dataset.day, 10);
+      d.classList.remove('active', 'done');
+      if (dDay < activeTrack) d.classList.add('done');
+      if (dDay === activeTrack) {
+        d.classList.add('active');
+        d.setAttribute('aria-current', 'true');
+      }
+    });
+
+    // Update caption with today's real info
+    const info = lidiaMap[todayJS];
+    const dayNameEl = document.getElementById('lidia-day-name');
+    const dayPhraseEl = document.getElementById('lidia-day-phrase');
+    if (dayNameEl && info) dayNameEl.textContent = info[0];
+    if (dayPhraseEl && info) dayPhraseEl.textContent = '"' + info[1] + '"';
+
+
+
+    // ---- Interactive Function Grapher ----
+    (function () {
+      const canvas = document.getElementById('fn-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // DPR-aware sizing
+      const dpr = window.devicePixelRatio || 1;
+      const W = canvas.width;
+      const H = canvas.height;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.scale(dpr, dpr);
+
+      // Function definitions
+      const FUNCTIONS = {
+        parabola: { fn: x => x * x, label: 'f(x) = x²', color: '#60a5fa', xMin: -4, xMax: 4, yMin: -1, yMax: 10 },
+        seno: { fn: x => Math.sin(x), label: 'f(x) = sen(x)', color: '#34d399', xMin: -7, xMax: 7, yMin: -1.5, yMax: 1.5 },
+        cubica: { fn: x => x * x * x - 3 * x, label: 'f(x) = x³ − 3x', color: '#f97316', xMin: -3, xMax: 3, yMin: -5, yMax: 5 },
+        exponencial: { fn: x => Math.exp(x), label: 'f(x) = eˣ', color: '#a78bfa', xMin: -3, xMax: 3, yMin: -0.5, yMax: 10 },
+        logaritmo: { fn: x => x > 0 ? Math.log(x) : null, label: 'f(x) = ln(x)', color: '#f472b6', xMin: 0.01, xMax: 8, yMin: -3, yMax: 3 }
+      };
+
+      let currentKey = 'parabola';
+      let animFrame = 0;
+      let animProgress = 0; // 0 → 1 for draw-on animation
+
+      function worldToCanvas(wx, wy, def) {
+        const x = ((wx - def.xMin) / (def.xMax - def.xMin)) * W;
+        const y = H - ((wy - def.yMin) / (def.yMax - def.yMin)) * H;
+        return [x, y];
+      }
+
+      function drawGrid(def) {
+        ctx.clearRect(0, 0, W, H);
+
+        // Background
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, W, H);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255,255,255,.06)';
+        ctx.lineWidth = 1;
+
+        // Vertical grid
+        for (let gx = Math.ceil(def.xMin); gx <= Math.floor(def.xMax); gx++) {
+          const [cx] = worldToCanvas(gx, 0, def);
+          ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke();
+        }
+        // Horizontal grid
+        for (let gy = Math.ceil(def.yMin); gy <= Math.floor(def.yMax); gy++) {
+          const [, cy] = worldToCanvas(0, gy, def);
+          ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+        }
+
+        // Axes
+        ctx.strokeStyle = 'rgba(255,255,255,.25)';
+        ctx.lineWidth = 1.5;
+
+        // X axis
+        const [, axisY] = worldToCanvas(0, 0, def);
+        ctx.beginPath(); ctx.moveTo(0, axisY); ctx.lineTo(W, axisY); ctx.stroke();
+
+        // Y axis
+        const [axisX] = worldToCanvas(0, 0, def);
+        ctx.beginPath(); ctx.moveTo(axisX, 0); ctx.lineTo(axisX, H); ctx.stroke();
+
+        // Axis tick labels
+        ctx.fillStyle = 'rgba(255,255,255,.28)';
+        ctx.font = '11px Inter, system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        for (let gx = Math.ceil(def.xMin); gx <= Math.floor(def.xMax); gx++) {
+          if (gx === 0) continue;
+          const [cx] = worldToCanvas(gx, 0, def);
+          ctx.fillText(gx, cx, axisY + 14);
+        }
+        ctx.textAlign = 'right';
+        for (let gy = Math.ceil(def.yMin); gy <= Math.floor(def.yMax); gy++) {
+          if (gy === 0) continue;
+          const [, cy] = worldToCanvas(0, gy, def);
+          ctx.fillText(gy, axisX - 6, cy + 4);
+        }
+      }
+
+      function drawCurve(def, progress) {
+        const steps = 600;
+        const drawUpTo = Math.floor(steps * progress);
+        const xStep = (def.xMax - def.xMin) / steps;
+
+        ctx.beginPath();
+        ctx.strokeStyle = def.color;
+        ctx.lineWidth = 2.5;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        // Glow effect
+        ctx.shadowColor = def.color;
+        ctx.shadowBlur = 10;
+
+        let started = false;
+        for (let i = 0; i <= drawUpTo; i++) {
+          const wx = def.xMin + i * xStep;
+          const wy = def.fn(wx);
+          if (wy === null || !isFinite(wy)) { started = false; continue; }
+          const [cx, cy] = worldToCanvas(wx, wy, def);
+          if (!started) { ctx.moveTo(cx, cy); started = true; }
+          else ctx.lineTo(cx, cy);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Animated dot at draw tip
+        if (progress < 1) {
+          const tipX = def.xMin + drawUpTo * xStep;
+          const tipY = def.fn(tipX);
+          if (tipY !== null && isFinite(tipY)) {
+            const [cx, cy] = worldToCanvas(tipX, tipY, def);
+            ctx.beginPath();
+            ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+            ctx.fillStyle = def.color;
+            ctx.shadowColor = def.color;
+            ctx.shadowBlur = 16;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      // Ease-in-out cubic for smooth deceleration
+      function easeInOut(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      let animStartTime = null;
+      const ANIM_DURATION = 1800; // ms — slower, more deliberate
+
+      function render(timestamp) {
+        if (!animStartTime) animStartTime = timestamp;
+        const elapsed = timestamp - animStartTime;
+        animProgress = Math.min(elapsed / ANIM_DURATION, 1);
+
+        const def = FUNCTIONS[currentKey];
+        drawGrid(def);
+        drawCurve(def, easeInOut(animProgress));
+
+        if (animProgress < 1) {
+          animFrame = requestAnimationFrame(render);
+        }
+      }
+
+      function startDraw(key) {
+        cancelAnimationFrame(animFrame);
+        currentKey = key;
+        animProgress = 0;
+        animStartTime = null;
+        animFrame = requestAnimationFrame(render);
+      }
+
+      // Button event listeners
+      document.querySelectorAll('.grapher-fn-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.grapher-fn-btn').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          const label = FUNCTIONS[btn.dataset.fn].label;
+          document.getElementById('grapher-fn-label').textContent = label;
+          startDraw(btn.dataset.fn);
+        });
+      });
+
+      // Initial draw
+      startDraw('parabola');
+    })();
+
+    // ---- Smooth scroll for nav links ----
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
