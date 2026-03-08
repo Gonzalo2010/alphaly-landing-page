@@ -6,18 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AlphaLy — Generador de ejercicios de matemáticas con IA</title>
   <meta name="description"
-    content="AlphaLy convierte cualquier tema de tu libro de mates en ejercicios ilimitados con solucionario. Sube una foto, la IA genera ejercicios, exámenes y explicaciones paso a paso. Powered by LidiaI." />
+    content="AlphaLy convierte cualquier tema de tu libro de matemáticas en ejercicios ilimitados con solucionario. Sube una foto, la IA genera ejercicios, exámenes y explicaciones paso a paso. Powered by LidiAI." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@400;600;700&display=swap"
     rel="stylesheet" />
 
-
   <style>
-    /* =============================================
-       RESET & BASE
-    ============================================= */
     *,
     *::before,
     *::after {
@@ -71,9 +67,6 @@
       list-style: none;
     }
 
-    /* =============================================
-       UTILITY
-    ============================================= */
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -109,7 +102,6 @@
       line-height: 1.7;
     }
 
-    /* fade-in animation triggered by IntersectionObserver */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
@@ -121,7 +113,6 @@
       transform: none;
     }
 
-    /* stagger children */
     .reveal-group>* {
       opacity: 0;
       transform: translateY(24px);
@@ -158,9 +149,6 @@
       transition-delay: .45s;
     }
 
-    /* =============================================
-       NAVBAR
-    ============================================= */
     .navbar {
       position: sticky;
       top: 0;
@@ -293,9 +281,6 @@
       transition: transform .25s, opacity .25s;
     }
 
-    /* =============================================
-       HERO
-    ============================================= */
     .hero {
       padding: 80px 24px 72px;
       text-align: center;
@@ -303,7 +288,6 @@
       overflow: hidden;
     }
 
-    /* subtle background pattern */
     .hero::before {
       content: '';
       position: absolute;
@@ -336,9 +320,7 @@
     }
 
     @keyframes pulse {
-
-      0%,
-      100% {
+      0%, 100% {
         opacity: 1;
         transform: scale(1);
       }
@@ -384,7 +366,6 @@
       padding: 13px 28px;
     }
 
-    /* ---------- Mockup ---------- */
     .mockup {
       max-width: 820px;
       margin: 0 auto;
@@ -439,7 +420,6 @@
       gap: 0;
     }
 
-    /* ---- Left: upload + analysis panel ---- */
     .mockup-left {
       padding: 0;
       border-right: 1px solid var(--c-border);
@@ -471,7 +451,6 @@
       flex-shrink: 0;
     }
 
-    /* Page thumbnails grid */
     .pages-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -565,7 +544,6 @@
       transform: rotate(-45deg) translate(1px, -1px);
     }
 
-    /* Upload add button */
     .page-add {
       aspect-ratio: 3/4;
       border-radius: 7px;
@@ -584,7 +562,6 @@
       stroke-width: 2;
     }
 
-    /* AI analysis result */
     .analysis-box {
       margin: 0 14px 14px;
       background: var(--c-surface);
@@ -645,7 +622,6 @@
       color: var(--c-brand-dark);
     }
 
-    /* ---- Right: generator panel ---- */
     .mockup-right {
       padding: 18px;
       display: flex;
@@ -675,7 +651,6 @@
       stroke-width: 2.2;
     }
 
-    /* Generator action buttons */
     .gen-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -727,7 +702,6 @@
       stroke: #fff;
     }
 
-    /* Output preview */
     .gen-output {
       flex: 1;
       display: flex;
@@ -795,9 +769,6 @@
       padding: 6px 0 2px;
     }
 
-    /* =============================================
-       HOW IT WORKS
-    ============================================= */
     .how-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -877,9 +848,6 @@
       line-height: 1.6;
     }
 
-    /* =============================================
-       BENEFITS
-    ============================================= */
     .benefits-section {
       background: var(--c-surface);
     }
@@ -934,9 +902,6 @@
       line-height: 1.55;
     }
 
-    /* =============================================
-       LIDIAI SECTION
-    ============================================= */
     .lidiai-section {
       padding: 96px 0;
       background: var(--c-bg);
@@ -959,7 +924,6 @@
       align-items: center;
     }
 
-    /* Avatar / logo card */
     .lidiai-visual {
       display: flex;
       flex-direction: column;
@@ -981,7 +945,6 @@
       object-fit: cover;
     }
 
-    /* Ripple circles — speaker/sonar pulse effect */
     .lidiai-ripple {
       position: absolute;
       inset: 0;
@@ -998,14 +961,35 @@
       animation: lidiai-ripple 3s ease-out infinite;
     }
 
-    .lidiai-ripple span:nth-child(1) { animation-delay: 0s; }
-    .lidiai-ripple span:nth-child(2) { animation-delay: .9s; }
-    .lidiai-ripple span:nth-child(3) { animation-delay: 1.8s; }
+    .lidiai-ripple span:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .lidiai-ripple span:nth-child(2) {
+      animation-delay: .9s;
+    }
+
+    .lidiai-ripple span:nth-child(3) {
+      animation-delay: 1.8s;
+    }
 
     @keyframes lidiai-ripple {
-      0%   { transform: scale(1);    opacity: .7; border-color: var(--c-brand); }
-      50%  { opacity: .3; border-color: #6ee7ff; }
-      100% { transform: scale(1.9);  opacity: 0; border-color: var(--c-brand); }
+      0% {
+        transform: scale(1);
+        opacity: .7;
+        border-color: var(--c-brand);
+      }
+
+      50% {
+        opacity: .3;
+        border-color: #6ee7ff;
+      }
+
+      100% {
+        transform: scale(1.9);
+        opacity: 0;
+        border-color: var(--c-brand);
+      }
     }
 
     .lidiai-name-badge {
@@ -1038,9 +1022,6 @@
       font-size: .78rem;
       color: var(--c-muted);
     }
-
-    /* Text side */
-    .lidiai-content {}
 
     .lidiai-content .section-sub {
       max-width: 480px;
@@ -1128,9 +1109,6 @@
       margin-bottom: 2px;
     }
 
-    /* =============================================
-       LIDIA SECTION
-    ============================================= */
     .lidia-section {
       background: var(--c-text);
       color: #fff;
@@ -1171,7 +1149,6 @@
       color: #fff;
     }
 
-    /* ---------- Ticker / progress bar ---------- */
     .ticker-wrap {
       background: rgba(255, 255, 255, .06);
       border: 1px solid rgba(255, 255, 255, .1);
@@ -1237,9 +1214,7 @@
     }
 
     @keyframes glow {
-
-      0%,
-      100% {
+      0%, 100% {
         box-shadow: 0 0 0 4px rgba(79, 99, 210, .35);
       }
 
@@ -1279,7 +1254,6 @@
       color: rgba(255, 255, 255, .45);
     }
 
-    /* scrolling marquee for mobile fallback */
     .lidia-marquee-wrap {
       overflow: hidden;
       border-top: 1px solid rgba(255, 255, 255, .1);
@@ -1329,9 +1303,6 @@
       font-style: normal;
     }
 
-    /* =============================================
-       TESTIMONIALS
-    ============================================= */
     .testimonials-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1415,9 +1386,6 @@
       color: var(--c-muted);
     }
 
-    /* =============================================
-       FAQ
-    ============================================= */
     .faq-section {
       background: var(--c-surface);
     }
@@ -1506,9 +1474,6 @@
       padding-top: 0;
     }
 
-    /* =============================================
-       INTERACTIVE GRAPHER SECTION
-    ============================================= */
     .grapher-section {
       padding: 96px 0;
       background: var(--c-surface);
@@ -1613,9 +1578,6 @@
       color: rgba(255, 255, 255, .7);
     }
 
-    /* =============================================
-       CTA BANNER
-    ============================================= */
     .cta-banner {
       background: var(--c-brand);
       padding: 72px 24px;
@@ -1658,9 +1620,6 @@
       background: #f0f2ff;
     }
 
-    /* =============================================
-       FOOTER
-    ============================================= */
     footer {
       background: var(--c-text);
       color: rgba(255, 255, 255, .6);
@@ -1713,9 +1672,6 @@
       color: rgba(255, 255, 255, .3);
     }
 
-    /* =============================================
-       MOBILE NAV
-    ============================================= */
     .mobile-nav {
       display: none;
       flex-direction: column;
@@ -1744,11 +1700,7 @@
       justify-content: center;
     }
 
-    /* =============================================
-       RESPONSIVE
-    ============================================= */
     @media (max-width: 860px) {
-
       .nav-links,
       .navbar-cta {
         display: none;
@@ -1791,11 +1743,6 @@
       .mockup-left {
         border-right: none;
         border-bottom: 1px solid var(--c-border);
-      }
-
-      .chalkboard {
-        min-height: 180px;
-        padding: 16px;
       }
 
       .week-track {
@@ -1850,23 +1797,21 @@
 </head>
 
 <body>
-
-  <!-- ============ NAVBAR ============ -->
   <nav class="navbar" role="navigation" aria-label="Navegación principal">
     <div class="navbar-inner">
       <a href="#" class="logo" aria-label="AlphaLy — inicio">
         <div class="logo-icon">
-          <img src="/logo.png" alt="AlphaLy logo" width="36" height="36" />
+          <img src="/logo.png" alt="Logo de AlphaLy" width="36" height="36" />
         </div>
         AlphaLy
       </a>
 
       <ul class="nav-links" role="list">
-        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
         <li><a href="#lidiai">LidiAI</a></li>
         <li><a href="#beneficios">Beneficios</a></li>
         <li><a href="#graficadora">Graficadora</a></li>
-        <li><a href="#precios">Precios</a></li>
+        <li><a href="#precios">Precio</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
 
@@ -1880,32 +1825,31 @@
       </button>
     </div>
 
-    <!-- Mobile nav -->
     <div class="mobile-nav" id="mobile-nav" role="menu">
-      <a href="#como-funciona" role="menuitem">Como funciona</a>
+      <a href="#como-funciona" role="menuitem">Cómo funciona</a>
       <a href="#lidiai" role="menuitem">LidiAI</a>
       <a href="#beneficios" role="menuitem">Beneficios</a>
       <a href="#graficadora" role="menuitem">Graficadora</a>
+      <a href="#precios" role="menuitem">Precio</a>
       <a href="#faq" role="menuitem">FAQ</a>
       <a href="#hero" class="btn btn-primary" role="menuitem">Probar demo</a>
     </div>
   </nav>
 
-  <!-- ============ HERO ============ -->
   <main>
     <section class="hero" id="hero" aria-labelledby="hero-heading">
       <div class="reveal">
         <div class="hero-badge">
           <span class="dot" aria-hidden="true"></span>
-            Powered by LidiAI — IA experta en mates
+          Powered by LidiAI — IA experta en matemáticas
         </div>
 
         <h1 class="hero-title" id="hero-heading">
-          Tu libro de mates,<br><span class="brand">ejercicios infinitos</span>
+          Tu libro de matemáticas,<br><span class="brand">ejercicios infinitos</span>
         </h1>
 
-          <p class="hero-sub">
-          Sube una foto de cualquier tema de tu libro. AlphaLy genera ejercicios nuevos, exámenes completos y solucionarios paso a paso de forma automática — con la IA entrenada por una profesora de verdad.
+        <p class="hero-sub">
+          Sube una foto de cualquier tema de tu libro. AlphaLy genera ejercicios nuevos, exámenes completos y solucionarios paso a paso de forma automática, con una IA entrenada por una profesora de verdad.
         </p>
 
         <div class="hero-cta">
@@ -1917,12 +1861,11 @@
             Probar demo
           </a>
           <a href="#como-funciona" class="btn btn-ghost">
-            Ver como funciona
+            Ver cómo funciona
           </a>
         </div>
       </div>
 
-      <!-- Mockup UI -->
       <div class="mockup reveal" aria-label="Vista previa de la interfaz de AlphaLy" role="img">
         <div class="mockup-bar">
           <div class="dot" aria-hidden="true"></div>
@@ -1930,22 +1873,20 @@
           <div class="dot" aria-hidden="true"></div>
           <span class="url">app.alphaly.es</span>
         </div>
-        <div class="mockup-body">
 
-          <!-- Left: upload + AI analysis panel -->
-          <div class="mockup-left" aria-label="Panel de subida y analisis del tema">
+        <div class="mockup-body">
+          <div class="mockup-left" aria-label="Panel de subida y análisis del tema">
             <div class="panel-header">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="3" />
                 <circle cx="8.5" cy="8.5" r="1.5" />
                 <polyline points="21 15 16 10 5 21" />
               </svg>
-              Paginas del libro subidas
+              Páginas del libro subidas
             </div>
 
-            <div class="pages-grid" aria-label="Miniaturas de paginas subidas">
-              <!-- Page 1 — uploaded -->
-              <div class="page-thumb uploaded" aria-label="Pagina 1 cargada">
+            <div class="pages-grid" aria-label="Miniaturas de páginas subidas">
+              <div class="page-thumb uploaded" aria-label="Página 1 cargada">
                 <div class="page-check" aria-hidden="true"></div>
                 <div class="page-lines">
                   <div class="page-line"></div>
@@ -1954,10 +1895,10 @@
                   <div class="page-line math"></div>
                   <div class="page-line"></div>
                 </div>
-                <span class="page-label">Pag. 1</span>
+                <span class="page-label">Pág. 1</span>
               </div>
-              <!-- Page 2 — uploaded -->
-              <div class="page-thumb uploaded" aria-label="Pagina 2 cargada">
+
+              <div class="page-thumb uploaded" aria-label="Página 2 cargada">
                 <div class="page-check" aria-hidden="true"></div>
                 <div class="page-lines">
                   <div class="page-line math"></div>
@@ -1966,10 +1907,10 @@
                   <div class="page-line math"></div>
                   <div class="page-line"></div>
                 </div>
-                <span class="page-label">Pag. 2</span>
+                <span class="page-label">Pág. 2</span>
               </div>
-              <!-- Page 3 — uploaded -->
-              <div class="page-thumb uploaded" aria-label="Pagina 3 cargada">
+
+              <div class="page-thumb uploaded" aria-label="Página 3 cargada">
                 <div class="page-check" aria-hidden="true"></div>
                 <div class="page-lines">
                   <div class="page-line"></div>
@@ -1978,25 +1919,24 @@
                   <div class="page-line"></div>
                   <div class="page-line math"></div>
                 </div>
-                <span class="page-label">Pag. 3</span>
+                <span class="page-label">Pág. 3</span>
               </div>
-              <!-- Add more -->
-              <div class="page-add" role="button" aria-label="Subir mas paginas">
+
+              <div class="page-add" role="button" aria-label="Subir más páginas">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 5v14M5 12h14" />
                 </svg>
               </div>
             </div>
 
-            <!-- AI analysis result -->
-            <div class="analysis-box" role="region" aria-label="Analisis del tema detectado por LidiaI">
+            <div class="analysis-box" role="region" aria-label="Análisis del tema detectado por LidiAI">
               <div class="analysis-label">
                 <span class="dot-pulse" aria-hidden="true"></span>
                 LidiAI — tema analizado
               </div>
               <div class="analysis-row">
                 <span class="ak">Tema</span>
-                <span class="av">Ecuaciones de 2.° grado</span>
+                <span class="av">Ecuaciones de 2.º grado</span>
               </div>
               <div class="analysis-row">
                 <span class="ak">Conceptos</span>
@@ -2004,12 +1944,11 @@
               </div>
               <div class="analysis-row">
                 <span class="ak">Nivel</span>
-                <span class="av">Secundaria — 4.° ESO</span>
+                <span class="av">Secundaria — 4.º ESO</span>
               </div>
             </div>
           </div>
 
-          <!-- Right: generator panel -->
           <div class="mockup-right" aria-label="Panel generador de material">
             <div class="gen-panel-title">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -2018,7 +1957,7 @@
               Generar material con LidiAI
             </div>
 
-            <div class="gen-actions" role="group" aria-label="Acciones de generacion">
+            <div class="gen-actions" role="group" aria-label="Acciones de generación">
               <button class="gen-btn primary" type="button">
                 <svg viewBox="0 0 24 24">
                   <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -2026,7 +1965,7 @@
                   <rect x="3" y="14" width="7" height="7" rx="1" />
                   <rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
-                Lista de practica
+                Lista de práctica
               </button>
               <button class="gen-btn" type="button">
                 <svg viewBox="0 0 24 24">
@@ -2042,7 +1981,7 @@
                   <path d="M12 20V4" />
                   <path d="M6 20v-6" />
                 </svg>
-                Nivel facil
+                Nivel fácil
               </button>
               <button class="gen-btn" type="button">
                 <svg viewBox="0 0 24 24">
@@ -2050,14 +1989,13 @@
                   <path d="M12 20V4" />
                   <path d="M18 20v-6" />
                 </svg>
-                Nivel dificil
+                Nivel difícil
               </button>
             </div>
 
-            <!-- Generated output preview -->
             <div class="gen-output" aria-label="Ejercicios generados">
               <div class="gen-output-header">
-                <strong>Lista de practica generada</strong>
+                <strong>Lista de práctica generada</strong>
                 <span class="chip">10 ejercicios</span>
               </div>
               <div class="exercise-item">
@@ -2072,15 +2010,13 @@
                 <span class="ex-num">3</span>
                 <span>Calcula el discriminante de <span class="ex-math">2x² − 5x + 3 = 0</span></span>
               </div>
-              <p class="gen-more">+ 7 ejercicios mas con solucionario incluido</p>
+              <p class="gen-more">+ 7 ejercicios más con solucionario incluido</p>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- ============ CÓMO FUNCIONA ============ -->
     <section class="section" id="como-funciona" aria-labelledby="como-heading">
       <div class="container">
         <div class="reveal" style="text-align:center;">
@@ -2100,7 +2036,7 @@
             </div>
             <p class="how-step">Paso 01</p>
             <h3>Sube una foto del tema</h3>
-            <p>Fotografía la página de tu libro — ecuaciones, derivadas, fracciones, geometría, lo que sea. El OCR lee el texto y las fórmulas matemáticas al instante.</p>
+            <p>Fotografía la página de tu libro: ecuaciones, derivadas, fracciones, geometría, lo que sea. El OCR lee el texto y las fórmulas matemáticas al instante.</p>
           </article>
 
           <article class="how-card">
@@ -2131,14 +2067,12 @@
       </div>
     </section>
 
-    <!-- ============ BENEFICIOS ============ -->
     <section class="section benefits-section" id="beneficios" aria-labelledby="beneficios-heading">
       <div class="container">
         <div class="reveal" style="text-align:center;">
-          <p class="section-label">Por que AlphaLy</p>
-          <h2 class="section-title" id="beneficios-heading">Todo lo que necesitas para las mates.</h2>
-          <p class="section-sub" style="margin:0 auto;">Para alumnos que quieren entender de verdad, y para profes que
-            no quieren preparar material desde cero.</p>
+          <p class="section-label">Por qué AlphaLy</p>
+          <h2 class="section-title" id="beneficios-heading">Todo lo que necesitas para las matemáticas.</h2>
+          <p class="section-sub" style="margin:0 auto;">Para alumnos que quieren entender de verdad y para profesores que no quieren preparar material desde cero.</p>
         </div>
 
         <div class="benefits-grid reveal-group">
@@ -2187,19 +2121,16 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
-            <h3>Para alumnos y profes</h3>
-            <p>Los alumnos practican sin límite; los profes preparan exámenes y materiales en minutos, no en horas.</p>
+            <h3>Para alumnos y profesores</h3>
+            <p>Los alumnos practican sin límite; los profesores preparan exámenes y materiales en minutos, no en horas.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ============ LIDIAI ============ -->
     <section class="lidiai-section" id="lidiai" aria-labelledby="lidiai-heading">
       <div class="container">
         <div class="lidiai-grid">
-
-          <!-- Visual: logo + badge -->
           <div class="lidiai-visual reveal">
             <div class="lidiai-logo-ring">
               <div class="lidiai-ripple" aria-hidden="true">
@@ -2216,12 +2147,11 @@
             </div>
           </div>
 
-          <!-- Content -->
           <div class="lidiai-content reveal">
             <p class="section-label">Conoce a LidiAI</p>
-            <h2 class="section-title" id="lidiai-heading" style="text-wrap:balance;">La IA que entiende las mates como una profesora de verdad</h2>
+            <h2 class="section-title" id="lidiai-heading" style="text-wrap:balance;">La IA que entiende las matemáticas como una profesora de verdad</h2>
             <p class="section-sub">
-              LidiAI no es un chatbot genérico. Es una IA especializada en matemáticas, entrenada por Lidia — profesora de mates con años de experiencia en las aulas. Cada explicación, cada ejercicio, cada corrección lleva el sello de quien sabe de qué habla.
+              LidiAI no es un chatbot genérico. Es una IA especializada en matemáticas, entrenada por Lidia, profesora de matemáticas con años de experiencia en el aula. Cada explicación, cada ejercicio y cada corrección llevan el sello de quien sabe de qué habla.
             </p>
 
             <div class="lidiai-pills">
@@ -2238,7 +2168,7 @@
                   <path d="M2 17l10 5 10-5" />
                   <path d="M2 12l10 5 10-5" />
                 </svg>
-                Temario ESO y Bachillerato
+                Temario de ESO y Bachillerato
               </div>
               <div class="lidiai-pill">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -2251,7 +2181,7 @@
                   <path d="M12 20h9" />
                   <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
-                Corrige errores con precisión de profe
+                Corrige errores con precisión docente
               </div>
             </div>
 
@@ -2266,16 +2196,14 @@
               </div>
               <div class="lidiai-trainer-text">
                 <strong>Entrenada por una profesora real</strong>
-                <p>Lidia ha revisado, corregido y validado cada respuesta que LidiAI da. No es IA a secas — es IA con criterio docente.</p>
+                <p>Lidia ha revisado, corregido y validado cada respuesta que LidiAI da. No es IA a secas: es IA con criterio docente.</p>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- ============ EL GUIÑO DE LIDIA ============ -->
     <section class="lidia-section" id="lidia" aria-labelledby="lidia-heading">
       <div class="lidia-inner">
         <p class="lidia-eyebrow reveal">El guiño de la profe</p>
@@ -2329,129 +2257,12 @@
       </div>
     </section>
 
-    <!-- ============ TESTIMONIOS ============ -->
-    <section class="section" id="testimonios" aria-labelledby="testimonios-heading" hidden>
-      <div class="container">
-        <div class="testimonials-grid reveal-group" style="display:none">
-          <article class="testimonial-card">
-            <div class="stars" aria-label="5 de 5 estrellas">
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            </div>
-            <p class="testimonial-text">
-              "Llevaba semanas sin entender los logaritmos. Subí un par de fotos y en 5 minutos lo pillé. Antes de
-              AlphaLy, lo más cerca que estuve de entenderlos fue soñando con ellos."
-            </p>
-            <div class="testimonial-author">
-              <div class="avatar avatar-blue" aria-hidden="true">A</div>
-              <div class="author-info">
-                <strong>Alejandro M.</strong>
-                <span>2º Bachillerato · Sevilla</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="testimonial-card">
-            <div class="stars" aria-label="5 de 5 estrellas">
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            </div>
-            <p class="testimonial-text">
-              "El generador de ejercicios me ha salvado la vida para repasar antes de los exámenes. Hago 10 problemas
-              similares hasta que me queda claro. Mi nota de mates pasó de un 4 a un 7."
-            </p>
-            <div class="testimonial-author">
-              <div class="avatar avatar-teal" aria-hidden="true">S</div>
-              <div class="author-info">
-                <strong>Sara G.</strong>
-                <span>4º ESO · Madrid</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="testimonial-card">
-            <div class="stars" aria-label="5 de 5 estrellas">
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            </div>
-            <p class="testimonial-text">
-              "Uso AlphaLy para preparar mis exámenes tipo test. Genero baterías de ejercicios por tema y los corrijo
-              automáticamente. Me ahorra literalmente horas cada semana."
-            </p>
-            <div class="testimonial-author">
-              <div class="avatar avatar-amber" aria-hidden="true">L</div>
-              <div class="author-info">
-                <strong>Lidia R.</strong>
-                <span>Profesora de Matemáticas · ESO/Bach</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ FAQ ============ -->
     <section class="section faq-section" id="faq" aria-labelledby="faq-heading">
       <div class="container">
         <div class="reveal" style="text-align:center;">
           <p class="section-label">Preguntas frecuentes</p>
           <h2 class="section-title" id="faq-heading">¿Tienes dudas? Normal.</h2>
-          <p class="section-sub" style="margin:0 auto;">Si no encuentras lo que buscas, escríbenos a
-            contacto@alphaly.es.</p>
+          <p class="section-sub" style="margin:0 auto;">Si no encuentras lo que buscas, escríbenos a contacto@alphaly.es.</p>
         </div>
 
         <div class="faq-list reveal" role="list">
@@ -2465,9 +2276,7 @@
               </span>
             </button>
             <div class="faq-answer" role="region">
-              <p>Nuestro OCR está entrenado para manejar fotos con iluminación irregular, ángulos torcidos y letra
-                manuscrita (incluso difícil de leer). En casos extremos, la IA te avisará de lo que no ha podido
-                interpretar correctamente.</p>
+              <p>Nuestro OCR está entrenado para manejar fotos con iluminación irregular, ángulos torcidos y letra manuscrita. En casos extremos, la IA te avisará de lo que no ha podido interpretar correctamente.</p>
             </div>
           </div>
 
@@ -2481,8 +2290,7 @@
               </span>
             </button>
             <div class="faq-answer" role="region">
-              <p>Siempre explica el proceso completo, paso a paso. No somos una copiadora de respuestas: el objetivo es
-                que entiendas el razonamiento para que puedas hacerlo tú solo en el examen.</p>
+              <p>Siempre explica el proceso completo, paso a paso. El objetivo es que entiendas el razonamiento para que puedas hacerlo tú solo en el examen.</p>
             </div>
           </div>
 
@@ -2496,8 +2304,7 @@
               </span>
             </button>
             <div class="faq-answer" role="region">
-              <p>Sí, cubre todos los niveles: desde 1º ESO hasta 2º Bachillerato, incluyendo Matemáticas Aplicadas y
-                Matemáticas de modalidad de Ciencias. También funciona con contenido universitario de primer ciclo.</p>
+              <p>Sí, cubre todos los niveles: desde 1.º ESO hasta 2.º Bachillerato, incluyendo Matemáticas Aplicadas y Matemáticas de modalidad de Ciencias.</p>
             </div>
           </div>
 
@@ -2511,8 +2318,7 @@
               </span>
             </button>
             <div class="faq-answer" role="region">
-              <p>Puedes probar la demo sin registrarte. Para guardar tu historial, generar ejercicios ilimitados y
-                acceder a todas las funciones, necesitarás una cuenta gratuita.</p>
+              <p>Puedes probar la demo sin registrarte. Para guardar tu historial y acceder a todas las funciones, necesitarás una cuenta.</p>
             </div>
           </div>
 
@@ -2526,106 +2332,101 @@
               </span>
             </button>
             <div class="faq-answer" role="region">
-              <p>Sí. Las fotos se procesan en servidores cifrados, no se comparten con terceros y puedes eliminarlas en
-                cualquier momento desde tu perfil. Cumplimos con el RGPD y la normativa española de protección de datos.
-              </p>
+              <p>Sí. Las fotos se procesan en servidores cifrados, no se comparten con terceros y puedes eliminarlas en cualquier momento desde tu perfil.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ TESTIMONIOS removed ============ -->
-
-    <!-- ============ GRAFICADORA INTERACTIVA ============ -->
     <section class="grapher-section" id="graficadora" aria-labelledby="grapher-heading">
       <div class="container">
         <div class="reveal" style="text-align:center;">
-          <p class="section-label">Visualizacion matematica</p>
-          <h2 class="section-title" id="grapher-heading">Entiende las funciones viendolas</h2>
-          <p class="section-sub" style="margin:0 auto;">AlphaLy no solo genera ejercicios — tambien te ayuda a
-            visualizar las matematicas. Selecciona una funcion y observa su comportamiento en tiempo real.</p>
+          <p class="section-label">Visualización matemática</p>
+          <h2 class="section-title" id="grapher-heading">Entiende las funciones viéndolas</h2>
+          <p class="section-sub" style="margin:0 auto;">AlphaLy no solo genera ejercicios: también te ayuda a visualizar las matemáticas. Selecciona una función y observa su comportamiento en tiempo real.</p>
         </div>
 
         <div class="grapher-layout reveal">
-          <!-- Function picker -->
           <div class="grapher-controls">
             <p
               style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);">
-              Selecciona una funcion</p>
-            <div class="grapher-fn-list" id="fn-list" role="listbox" aria-label="Funciones matematicas">
+              Selecciona una función
+            </p>
+            <div class="grapher-fn-list" id="fn-list" role="listbox" aria-label="Funciones matemáticas">
               <button class="grapher-fn-btn active" data-fn="parabola" role="option" aria-selected="true">
                 <span class="fn-label">f(x) = x²</span>
-                <span class="fn-name">Parabola — funcion cuadratica</span>
+                <span class="fn-name">Parábola — función cuadrática</span>
               </button>
               <button class="grapher-fn-btn" data-fn="seno" role="option" aria-selected="false">
                 <span class="fn-label">f(x) = sen(x)</span>
-                <span class="fn-name">Funcion trigonometrica</span>
+                <span class="fn-name">Función trigonométrica</span>
               </button>
               <button class="grapher-fn-btn" data-fn="cubica" role="option" aria-selected="false">
                 <span class="fn-label">f(x) = x³ − 3x</span>
-                <span class="fn-name">Funcion cubica con puntos criticos</span>
+                <span class="fn-name">Función cúbica con puntos críticos</span>
               </button>
               <button class="grapher-fn-btn" data-fn="exponencial" role="option" aria-selected="false">
                 <span class="fn-label">f(x) = eˣ</span>
-                <span class="fn-name">Funcion exponencial</span>
+                <span class="fn-name">Función exponencial</span>
               </button>
               <button class="grapher-fn-btn" data-fn="logaritmo" role="option" aria-selected="false">
                 <span class="fn-label">f(x) = ln(x)</span>
-                <span class="fn-name">Funcion logaritmica</span>
+                <span class="fn-name">Función logarítmica</span>
               </button>
             </div>
           </div>
 
-          <!-- Canvas grapher -->
           <div class="grapher-canvas-wrap">
             <span class="grapher-canvas-label" aria-hidden="true">AlphaLy Grapher</span>
-            <canvas id="fn-canvas" width="560" height="380" aria-label="Grafica de la funcion seleccionada"></canvas>
+            <canvas id="fn-canvas" width="560" height="380" aria-label="Gráfica de la función seleccionada"></canvas>
             <span class="grapher-canvas-fn" id="grapher-fn-label" aria-hidden="true">f(x) = x²</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ PRECIOS ============ -->
     <section class="section" id="precios" aria-labelledby="precios-heading" style="background:var(--c-surface);">
       <div class="container">
         <div class="reveal" style="text-align:center;">
           <p class="section-label">Precio</p>
           <h2 class="section-title" id="precios-heading">Sin suscripciones raras. Sin letra pequeña.</h2>
-          <p class="section-sub" style="margin:0 auto 48px;">Un precio claro para todo el año.</p>
+          <p class="section-sub" style="margin:0 auto 48px;">Un único pago. Acceso completo.</p>
         </div>
+
         <div class="reveal" style="max-width:420px;margin:0 auto;">
           <div style="background:var(--c-bg);border:2px solid var(--c-brand);border-radius:20px;padding:36px 40px;text-align:center;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
             <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--c-brand),#6ee7ff,var(--c-brand));"></div>
             <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--c-brand);margin-bottom:16px;">Acceso completo</p>
             <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;margin-bottom:8px;">
-              <span style="font-size:3.2rem;font-weight:900;letter-spacing:-.04em;color:var(--c-text);line-height:1;">100€</span>
+              <span style="font-size:3.2rem;font-weight:900;letter-spacing:-.04em;color:var(--c-text);line-height:1;">100 €</span>
               <span style="font-size:1rem;color:var(--c-muted);padding-bottom:6px;">pago único</span>
             </div>
-            <p style="font-size:.85rem;color:var(--c-muted);margin-bottom:28px;">Una vez y para siempre. Sin renovaciones, sin sorpresas.</p>
+            <p style="font-size:.85rem;color:var(--c-muted);margin-bottom:28px;">Pagas una vez y listo. Sin renovaciones, sin mensualidades y sin sorpresas.</p>
+
             <ul style="list-style:none;text-align:left;display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
               <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="9" /></svg>
                 Ejercicios ilimitados de cualquier tema
               </li>
               <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="9" /></svg>
                 Solucionario paso a paso incluido
               </li>
               <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
-                LidiaI — IA entrenada por profesora real
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="9" /></svg>
+                LidiAI — IA entrenada por una profesora real
               </li>
               <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="9" /></svg>
                 Graficadora interactiva de funciones
               </li>
               <li style="display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--c-text);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
-                Todo el temario ESO y Bachillerato
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-brand)" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="9" /></svg>
+                Todo el temario de ESO y Bachillerato
               </li>
             </ul>
+
             <a href="/demo.html" class="btn btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:14px 0;">
               Probar demo
             </a>
@@ -2634,22 +2435,20 @@
       </div>
     </section>
 
-    <!-- ============ CTA BANNER ============ -->
     <section class="cta-banner" aria-labelledby="cta-heading">
       <div class="reveal">
-        <h2 id="cta-heading">100€, pago único. Ejercicios infinitos.</h2>
-        <p>Sin sorpresas. Sin letra pequeña. Solo mates que se entienden.</p>
+        <h2 id="cta-heading">100 €, pago único. Ejercicios infinitos.</h2>
+        <p>Sin sorpresas. Sin letra pequeña. Solo matemáticas que se entienden.</p>
         <a href="/demo.html" class="btn btn-white">Probar demo →</a>
       </div>
     </section>
   </main>
 
-  <!-- ============ FOOTER ============ -->
   <footer role="contentinfo">
     <div class="footer-inner">
       <a href="#" class="footer-logo" aria-label="AlphaLy — inicio">
         <div class="logo-icon">
-          <img src="/logo.png" alt="AlphaLy logo" width="36" height="36" />
+          <img src="/logo.png" alt="Logo de AlphaLy" width="36" height="36" />
         </div>
         AlphaLy
       </a>
@@ -2664,9 +2463,7 @@
     </div>
   </footer>
 
-  <!-- ============ JS ============ -->
   <script>
-    // ---- Hamburger menu ----
     const hamburger = document.getElementById('hamburger-btn');
     const mobileNav = document.getElementById('mobile-nav');
 
@@ -2675,7 +2472,6 @@
       hamburger.setAttribute('aria-expanded', isOpen);
     });
 
-    // Close mobile nav on link click
     mobileNav.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         mobileNav.classList.remove('open');
@@ -2683,19 +2479,16 @@
       });
     });
 
-    // ---- FAQ accordion ----
     document.querySelectorAll('.faq-question').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = btn.closest('.faq-item');
         const isOpen = item.classList.contains('open');
 
-        // Close all
         document.querySelectorAll('.faq-item').forEach(i => {
           i.classList.remove('open');
           i.querySelector('.faq-question').setAttribute('aria-expanded', false);
         });
 
-        // Open clicked if it was closed
         if (!isOpen) {
           item.classList.add('open');
           btn.setAttribute('aria-expanded', true);
@@ -2703,7 +2496,6 @@
       });
     });
 
-    // ---- Intersection Observer for reveal animations ----
     const revealEls = document.querySelectorAll('.reveal, .reveal-group');
 
     const observer = new IntersectionObserver((entries) => {
@@ -2717,28 +2509,22 @@
 
     revealEls.forEach(el => observer.observe(el));
 
-    // ---- Lidia's week ticker: highlight the REAL current day ----
-    // JS getDay() returns 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-    // Our data-day attributes: 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri
     const dayItems = document.querySelectorAll('.day-item');
-    const todayJS = new Date().getDay(); // 0-6
+    const todayJS = new Date().getDay();
 
-    // Lidia's expressions: what she calls each weekday
-    // key = JS day number, value = [official name, what Lidia calls it]
     const lidiaMap = {
       1: ['lunes', 'casi martes'],
       2: ['martes', 'casi miércoles'],
       3: ['miércoles', 'casi jueves'],
       4: ['jueves', 'casi viernes'],
       5: ['viernes', 'casi fin de semana'],
-      6: ['sabado', 'casi lunes... ay'],
+      6: ['sábado', 'casi lunes... ay'],
       0: ['domingo', 'ya casi lunes... ay']
     };
 
-    // Map JS day to our 1-5 track index; weekends fall on Friday (index 5)
     function jsToTrack(jsDay) {
-      if (jsDay === 0 || jsDay === 6) return 5; // weekend → Friday lit
-      return jsDay; // 1-5 directly
+      if (jsDay === 0 || jsDay === 6) return 5;
+      return jsDay;
     }
 
     const activeTrack = jsToTrack(todayJS);
@@ -2753,22 +2539,19 @@
       }
     });
 
-    // Update caption with today's real info
     const info = lidiaMap[todayJS];
     const dayNameEl = document.getElementById('lidia-day-name');
     const dayPhraseEl = document.getElementById('lidia-day-phrase');
+
     if (dayNameEl && info) dayNameEl.textContent = info[0];
     if (dayPhraseEl && info) dayPhraseEl.textContent = '"' + info[1] + '"';
 
-
-
-    // ---- Interactive Function Grapher ----
     (function () {
       const canvas = document.getElementById('fn-canvas');
       if (!canvas) return;
+
       const ctx = canvas.getContext('2d');
 
-      // DPR-aware sizing
       const dpr = window.devicePixelRatio || 1;
       const W = canvas.width;
       const H = canvas.height;
@@ -2778,7 +2561,6 @@
       canvas.style.height = H + 'px';
       ctx.scale(dpr, dpr);
 
-      // Function definitions
       const FUNCTIONS = {
         parabola: { fn: x => x * x, label: 'f(x) = x²', color: '#60a5fa', xMin: -4, xMax: 4, yMin: -1, yMax: 10 },
         seno: { fn: x => Math.sin(x), label: 'f(x) = sen(x)', color: '#34d399', xMin: -7, xMax: 7, yMin: -1.5, yMax: 1.5 },
@@ -2789,7 +2571,9 @@
 
       let currentKey = 'parabola';
       let animFrame = 0;
-      let animProgress = 0; // 0 → 1 for draw-on animation
+      let animProgress = 0;
+      let animStartTime = null;
+      const ANIM_DURATION = 1800;
 
       function worldToCanvas(wx, wy, def) {
         const x = ((wx - def.xMin) / (def.xMax - def.xMin)) * W;
@@ -2800,46 +2584,53 @@
       function drawGrid(def) {
         ctx.clearRect(0, 0, W, H);
 
-        // Background
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, W, H);
 
-        // Grid lines
         ctx.strokeStyle = 'rgba(255,255,255,.06)';
         ctx.lineWidth = 1;
 
-        // Vertical grid
         for (let gx = Math.ceil(def.xMin); gx <= Math.floor(def.xMax); gx++) {
           const [cx] = worldToCanvas(gx, 0, def);
-          ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke();
-        }
-        // Horizontal grid
-        for (let gy = Math.ceil(def.yMin); gy <= Math.floor(def.yMax); gy++) {
-          const [, cy] = worldToCanvas(0, gy, def);
-          ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(cx, 0);
+          ctx.lineTo(cx, H);
+          ctx.stroke();
         }
 
-        // Axes
+        for (let gy = Math.ceil(def.yMin); gy <= Math.floor(def.yMax); gy++) {
+          const [, cy] = worldToCanvas(0, gy, def);
+          ctx.beginPath();
+          ctx.moveTo(0, cy);
+          ctx.lineTo(W, cy);
+          ctx.stroke();
+        }
+
         ctx.strokeStyle = 'rgba(255,255,255,.25)';
         ctx.lineWidth = 1.5;
 
-        // X axis
         const [, axisY] = worldToCanvas(0, 0, def);
-        ctx.beginPath(); ctx.moveTo(0, axisY); ctx.lineTo(W, axisY); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, axisY);
+        ctx.lineTo(W, axisY);
+        ctx.stroke();
 
-        // Y axis
         const [axisX] = worldToCanvas(0, 0, def);
-        ctx.beginPath(); ctx.moveTo(axisX, 0); ctx.lineTo(axisX, H); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(axisX, 0);
+        ctx.lineTo(axisX, H);
+        ctx.stroke();
 
-        // Axis tick labels
         ctx.fillStyle = 'rgba(255,255,255,.28)';
         ctx.font = '11px Inter, system-ui, sans-serif';
         ctx.textAlign = 'center';
+
         for (let gx = Math.ceil(def.xMin); gx <= Math.floor(def.xMax); gx++) {
           if (gx === 0) continue;
           const [cx] = worldToCanvas(gx, 0, def);
           ctx.fillText(gx, cx, axisY + 14);
         }
+
         ctx.textAlign = 'right';
         for (let gy = Math.ceil(def.yMin); gy <= Math.floor(def.yMax); gy++) {
           if (gy === 0) continue;
@@ -2858,24 +2649,30 @@
         ctx.lineWidth = 2.5;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
-
-        // Glow effect
         ctx.shadowColor = def.color;
         ctx.shadowBlur = 10;
 
         let started = false;
+
         for (let i = 0; i <= drawUpTo; i++) {
           const wx = def.xMin + i * xStep;
           const wy = def.fn(wx);
-          if (wy === null || !isFinite(wy)) { started = false; continue; }
+          if (wy === null || !isFinite(wy)) {
+            started = false;
+            continue;
+          }
           const [cx, cy] = worldToCanvas(wx, wy, def);
-          if (!started) { ctx.moveTo(cx, cy); started = true; }
-          else ctx.lineTo(cx, cy);
+          if (!started) {
+            ctx.moveTo(cx, cy);
+            started = true;
+          } else {
+            ctx.lineTo(cx, cy);
+          }
         }
+
         ctx.stroke();
         ctx.shadowBlur = 0;
 
-        // Animated dot at draw tip
         if (progress < 1) {
           const tipX = def.xMin + drawUpTo * xStep;
           const tipY = def.fn(tipX);
@@ -2892,13 +2689,9 @@
         }
       }
 
-      // Ease-in-out cubic for smooth deceleration
       function easeInOut(t) {
         return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       }
-
-      let animStartTime = null;
-      const ANIM_DURATION = 1800; // ms — slower, more deliberate
 
       function render(timestamp) {
         if (!animStartTime) animStartTime = timestamp;
@@ -2922,26 +2715,25 @@
         animFrame = requestAnimationFrame(render);
       }
 
-      // Button event listeners
       document.querySelectorAll('.grapher-fn-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.grapher-fn-btn').forEach(b => {
             b.classList.remove('active');
             b.setAttribute('aria-selected', 'false');
           });
+
           btn.classList.add('active');
           btn.setAttribute('aria-selected', 'true');
+
           const label = FUNCTIONS[btn.dataset.fn].label;
           document.getElementById('grapher-fn-label').textContent = label;
           startDraw(btn.dataset.fn);
         });
       });
 
-      // Initial draw
       startDraw('parabola');
     })();
 
-    // ---- Smooth scroll for nav links ----
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', (e) => {
         const target = document.querySelector(anchor.getAttribute('href'));
@@ -2952,7 +2744,6 @@
       });
     });
   </script>
-
 </body>
 
 </html>
